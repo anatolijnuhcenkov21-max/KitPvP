@@ -1,0 +1,30 @@
+name: KitPvP
+version: 1.0.0
+main: com.crystalox.kitpvp.KitPvPPlugin
+api-version: '1.16'
+softdepend: [EconomyPlus]
+
+commands:
+  kit:
+    description: Give yourself a kit
+    usage: /kit [name]
+  kits:
+    description: List all available kits
+    usage: /kits
+  stats:
+    description: View player statistics
+    usage: /stats [player]
+  kitpvp:
+    description: KitPvP admin commands
+    usage: /kitpvp <pos1|pos2|savearena|setspawn|reload>
+
+permissions:
+  crystalox.kitpvp.admin:
+    description: Access to KitPvP admin commands
+    default: op
+  crystalox.kitpvp.command.kit:
+    description: Allows using the kit command
+    default: true
+  crystalox.kitpvp.command.stats:
+    description: Allows using the stats command
+    default: true

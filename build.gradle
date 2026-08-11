@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.crystalox'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://repo.papermc.io/repository/maven-public/' }
+}
+
+dependencies {
+    compileOnly 'io.papermc.paper:paper-api:1.17.1-R0.1-SNAPSHOT'
+    implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
+}
+
+compileJava {
+    options.release = 8
+}
+
+configurations.compileClasspath {
+    attributes {
+        attribute org.gradle.api.attributes.Attribute.of('org.gradle.jvm.version', Integer), 17
+    }
+}
+
+jar {
+    archiveFileName = 'KitPvP-1.0.0.jar'
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}

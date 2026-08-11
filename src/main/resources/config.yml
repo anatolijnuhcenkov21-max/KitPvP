@@ -1,0 +1,127 @@
+spawn-location:
+  world: world
+  x: 0
+  y: 64
+  z: 0
+  yaw: 0
+  pitch: 0
+
+arena:
+  enabled: false
+  world: world
+  min:
+    x: -50
+    y: 0
+    z: -50
+  max:
+    x: 50
+    y: 256
+    z: 50
+
+spawn-protection-radius: 10
+
+default-kit: 'warrior'
+
+enable-combo: true
+combo-window-ms: 3000
+
+killstreak-rewards:
+  3: '&e%player% &7is on a 3 killstreak!'
+  5: 'cmd:give %player% diamond 1'
+  10: '&6%player% &eis unstoppable!'
+
+scoreboard-title: '&6&lKITPVP'
+
+kits:
+  warrior:
+    display-name: '&cWarrior'
+    icon: IRON_SWORD
+    description:
+      - '&7A balanced melee kit'
+    cooldown-seconds: 30
+    permission: 'none'
+    price: 0
+    items:
+      - material: IRON_SWORD
+        name: '&cWarrior Sword'
+        enchants:
+          SHARPNESS: 2
+      - material: GOLDEN_APPLE
+        amount: 2
+        name: '&6Apple'
+    armor:
+      helmet:
+        material: IRON_HELMET
+        name: '&cWarrior Helmet'
+      chestplate:
+        material: IRON_CHESTPLATE
+        name: '&cWarrior Chestplate'
+      leggings:
+        material: IRON_LEGGINGS
+        name: '&cWarrior Leggings'
+      boots:
+        material: IRON_BOOTS
+        name: '&cWarrior Boots'
+    effects:
+      - SPEED:0:0
+  archer:
+    display-name: '&aArcher'
+    icon: BOW
+    description:
+      - '&7Ranged combat specialist'
+    cooldown-seconds: 60
+    permission: 'none'
+    price: 500
+    items:
+      - material: BOW
+        name: '&aArcher Bow'
+        enchants:
+          POWER: 2
+          INFINITY: 1
+      - material: ARROW
+        amount: 16
+      - material: GOLDEN_APPLE
+        amount: 1
+        name: '&6Apple'
+    armor:
+      helmet:
+        material: LEATHER_HELMET
+        name: '&aArcher Hood'
+      chestplate:
+        material: LEATHER_CHESTPLATE
+        name: '&aArcher Chestplate'
+      leggings:
+        material: LEATHER_LEGGINGS
+        name: '&aArcher Leggings'
+      boots:
+        material: LEATHER_BOOTS
+        name: '&aArcher Boots'
+    effects:
+      - SPEED:0:1
+
+messages:
+  join-spawn-teleport: '&7You have been teleported to the arena spawn!'
+  default-kit-given: '&7You received the default kit &e%kit%&7!'
+  kit-not-found: '&cKit &e%kit% &cnot found!'
+  kit-cooldown: '&cKit &e%kit% &cis still on cooldown!'
+  kit-no-permission: '&cYou do not have permission to use kit &e%kit%&c!'
+  kit-bought: '&aYou bought kit &e%kit% &afor &6$%price%&a!'
+  kit-cannot-afford: '&cYou cannot afford kit &e%kit%&c!'
+  kit-given: '&aKit &e%kit% &awas given to &e%player%&a!'
+  stats-title: '&6&lStats of &e%player%'
+  stats-kills: '&7Kills: &e%kills%'
+  stats-deaths: '&7Deaths: &e%deaths%'
+  stats-kdr: '&7KDR: &e%kdr%'
+  stats-killstreak: '&7Best killstreak: &e%killstreak%'
+  stats-top-header: '&6&lTop Players'
+  stats-top-entry: '&7%position%. &e%player% &7- &e%kills% &7kills'
+  arena-pos1-set: '&aPosition 1 set!'
+  arena-pos2-set: '&aPosition 2 set!'
+  arena-saved: '&aArena saved successfully!'
+  arena-not-set: '&cArena has not been set yet!'
+  spawn-set: '&aSpawn location set!'
+  reload-success: '&aConfig reloaded successfully!'
+  no-permission: '&cYou do not have permission to do that!'
+  unknown-command: '&cUnknown command!'
+  death-format: '&7%victim% &8was killed by &7%killer%'
+  death-format-nokiller: '&7%victim% &8died'
