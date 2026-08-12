@@ -35,8 +35,8 @@ public class QuestGui implements Listener {
         for (int i = 0; i < inv.getSize(); i++) {
             inv.setItem(i, filler());
         }
-        List<Quest> daily = plugin.getQuestManager().getDaily();
-        List<Quest> weekly = plugin.getQuestManager().getWeekly();
+        List<Quest> daily = visibleQuests(player, plugin, plugin.getQuestManager().getDaily());
+        List<Quest> weekly = visibleQuests(player, plugin, plugin.getQuestManager().getWeekly());
         for (int i = 0; i < daily.size() && i < 9; i++) {
             inv.setItem(i, questItem(player, plugin, daily.get(i)));
         }
@@ -60,7 +60,7 @@ public class QuestGui implements Listener {
             return;
         }
         Player player = (Player) event.getWhoClicked();
-        Quest quest = questAt(event.getSlot());
+        Quest quest = questAt(player, event.getSlot());
         if (quest == null) {
             return;
         }
@@ -78,14 +78,29 @@ public class QuestGui implements Listener {
         }
     }
 
-    private Quest questAt(int slot) {
-        if (slot < 9 && slot < plugin.getQuestManager().getDaily().size()) {
-            return plugin.getQuestManager().getDaily().get(slot);
+    private Quest questAt(Player player, int slot) {
+        if (slot < 9) {
+            return visibleQuest(player, plugin.getQuestManager().getDaily(), slot);
         }
-        if (slot >= 9 && slot < 18 && slot - 9 < plugin.getQuestManager().getWeekly().size()) {
-            return plugin.getQuestManager().getWeekly().get(slot - 9);
+        if (slot >= 9 && slot < 18) {
+            return visibleQuest(player, plugin.getQuestManager().getWeekly(), slot - 9);
         }
         return null;
+    }
+
+    private Quest visibleQuest(Player player, List<Quest> quests, int index) {
+        List<Quest> visible = visibleQuests(player, plugin, quests);
+        return index < visible.size() ? visible.get(index) : null;
+    }
+
+    private static List<Quest> visibleQuests(Player player, KitPvPPlugin plugin, List<Quest> quests) {
+        List<Quest> visible = new ArrayList<Quest>();
+        for (Quest quest : quests) {
+            if (quest.getKit() == null || plugin.getKitStore().owns(player.getUniqueId(), quest.getKit())) {
+                visible.add(quest);
+            }
+        }
+        return visible;
     }
 
     private static ItemStack questItem(Player player, KitPvPPlugin plugin, Quest quest) {
@@ -98,6 +113,7 @@ public class QuestGui implements Listener {
             String kitName = kit != null ? kit.getDisplayName() : quest.getKit();
             lore.add(Message.color("&7Класс: &f" + kitName));
         }
+        lore.add(Message.color("&6Награда: &f" + quest.getReward() + " монет"));
         if (complete) {
             lore.add(Message.color("&aНажми, чтобы забрать!"));
         }
