@@ -1,6 +1,7 @@
 package com.crystalox.kitpvp.listener;
 
 import com.crystalox.kitpvp.KitPvPPlugin;
+import com.crystalox.kitpvp.commands.KitCommand;
 import com.crystalox.kitpvp.kit.Kit;
 import com.crystalox.kitpvp.kit.KitApplier;
 import com.crystalox.kitpvp.util.Message;
@@ -25,6 +26,7 @@ public class JoinQuitListener implements Listener {
         Player player = event.getPlayer();
         teleportToSpawn(player);
         applyDefaultKit(player);
+        player.getInventory().setItem(8, KitCommand.selectorItem());
         plugin.getStatsManager().load(player.getUniqueId());
     }
 

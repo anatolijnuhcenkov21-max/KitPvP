@@ -7,13 +7,17 @@ import com.crystalox.kitpvp.kit.KitApplier;
 import com.crystalox.kitpvp.util.Format;
 import com.crystalox.kitpvp.util.Message;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -67,6 +71,7 @@ public class KitCommand implements CommandExecutor, Listener {
             return;
         }
         KitApplier.apply(player, kit);
+        player.getInventory().setItem(8, selectorItem());
         plugin.getKitCooldownManager().set(player.getUniqueId(), kit.getId(), kit.getCooldownSeconds());
         player.sendMessage(msg("kit-given")
                 .replace("%kit%", kit.getId())
@@ -158,5 +163,41 @@ public class KitCommand implements CommandExecutor, Listener {
 
     private String msg(String key) {
         return Message.of(plugin.getConfig().getConfigurationSection("messages"), key);
+    }
+
+    public static ItemStack selectorItem() {
+        ItemStack item = new ItemStack(Material.WOODEN_SWORD);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(Message.color("&6&lClass Selector"));
+        List<String> lore = new ArrayList<String>();
+        lore.add(Message.color("&7Right-click to choose your class"));
+        meta.setLore(lore);
+        meta.setUnbreakable(true);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
+        Player player = event.getPlayer();
+        ItemStack held = player.getInventory().getItemInMainHand();
+        if (!isSelector(held)) {
+            return;
+        }
+        event.setCancelled(true);
+        openKitGui(player);
+    }
+
+    private boolean isSelector(ItemStack item) {
+        if (item == null || item.getType() != Material.WOODEN_SWORD) {
+            return false;
+        }
+        if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
+            return false;
+        }
+        return ChatColor.stripColor(item.getItemMeta().getDisplayName()).equals("Class Selector");
     }
 }

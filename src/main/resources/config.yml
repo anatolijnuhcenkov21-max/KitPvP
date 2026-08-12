@@ -20,7 +20,7 @@ arena:
 
 spawn-protection-radius: 10
 
-default-kit: 'warrior'
+default-kit: 'none'
 
 enable-combo: true
 combo-window-ms: 3000
@@ -37,67 +37,111 @@ kits:
     display-name: '&cWarrior'
     icon: IRON_SWORD
     description:
-      - '&7A balanced melee kit'
-    cooldown-seconds: 30
+      - '&7Melee fighter: iron armor,'
+      - '&7sharp blade, health boost'
+    cooldown-seconds: 20
     permission: 'none'
     price: 0
     items:
       - material: IRON_SWORD
-        name: '&cWarrior Sword'
+        name: '&cWarrior Blade'
         enchants:
           SHARPNESS: 2
       - material: GOLDEN_APPLE
         amount: 2
-        name: '&6Apple'
+        name: '&6Health Apple'
     armor:
       helmet:
         material: IRON_HELMET
-        name: '&cWarrior Helmet'
+        name: '&cWarrior Helm'
       chestplate:
         material: IRON_CHESTPLATE
-        name: '&cWarrior Chestplate'
+        name: '&cWarrior Plate'
       leggings:
         material: IRON_LEGGINGS
-        name: '&cWarrior Leggings'
+        name: '&cWarrior Legs'
       boots:
         material: IRON_BOOTS
         name: '&cWarrior Boots'
     effects:
-      - SPEED:0:0
+      - SPEED:600:0
   archer:
     display-name: '&aArcher'
     icon: BOW
     description:
-      - '&7Ranged combat specialist'
-    cooldown-seconds: 60
+      - '&7Ranged: longbow, arrows,'
+      - '&7chainmail, speed'
+    cooldown-seconds: 20
     permission: 'none'
-    price: 500
+    price: 0
     items:
       - material: BOW
-        name: '&aArcher Bow'
+        name: '&aLongbow'
         enchants:
-          POWER: 2
-          INFINITY: 1
+          POWER: 3
       - material: ARROW
-        amount: 16
+        amount: 24
       - material: GOLDEN_APPLE
         amount: 1
-        name: '&6Apple'
+        name: '&6Health Apple'
+    armor:
+      helmet:
+        material: CHAINMAIL_HELMET
+        name: '&aArcher Hood'
+      chestplate:
+        material: CHAINMAIL_CHESTPLATE
+        name: '&aArcher Vest'
+      leggings:
+        material: CHAINMAIL_LEGGINGS
+        name: '&aArcher Legs'
+      boots:
+        material: CHAINMAIL_BOOTS
+        name: '&aArcher Boots'
+    effects:
+      - SPEED:600:0
+  mage:
+    display-name: '&bMage'
+    icon: SPLASH_POTION
+    description:
+      - '&7Potion fighter: poison splash,'
+      - '&7harming splash, speed'
+    cooldown-seconds: 30
+    permission: 'none'
+    price: 0
+    items:
+      - material: STONE_SWORD
+        name: '&bMage Blade'
+        enchants:
+          SHARPNESS: 1
+      - material: SPLASH_POTION
+        amount: 2
+        name: '&2Poison Splash'
+        potion-effects:
+          - POISON:120:1
+      - material: SPLASH_POTION
+        amount: 2
+        name: '&cHarming Splash'
+        potion-effects:
+          - INSTANT_DAMAGE:1:1
+      - material: SPLASH_POTION
+        amount: 1
+        name: '&bSpeed Splash'
+        potion-effects:
+          - SPEED:600:1
     armor:
       helmet:
         material: LEATHER_HELMET
-        name: '&aArcher Hood'
+        name: '&bMage Hood'
       chestplate:
         material: LEATHER_CHESTPLATE
-        name: '&aArcher Chestplate'
+        name: '&bMage Robe'
       leggings:
         material: LEATHER_LEGGINGS
-        name: '&aArcher Leggings'
+        name: '&bMage Legs'
       boots:
         material: LEATHER_BOOTS
-        name: '&aArcher Boots'
-    effects:
-      - SPEED:0:1
+        name: '&bMage Boots'
+    effects: []
 
 messages:
   join-spawn-teleport: '&7You have been teleported to the arena spawn!'
