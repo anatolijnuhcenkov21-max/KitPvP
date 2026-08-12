@@ -3,6 +3,7 @@ package com.crystalox.kitpvp.util;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -13,78 +14,99 @@ import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public final class ItemParser {
 
     private ItemParser() {
     }
 
-    public static ItemStack parse(ConfigurationSection section) {
-        Material material = material(section);
-        if (material == null) {
-            return null;
-        }
-        ItemStack item = new ItemStack(material, section.getInt("amount", 1));
-        applyMeta(item, section);
-        applyEnchants(item, section);
-        applyPotion(item, section);
+    public static ItemStack parse(ConfigurationSection s) {
+        return parse(s.getValues(false));
+    }
+
+    public static ItemStack parse(Map<String, Object> m) {
+        Material material = material(m);
+        int amount = num(m.get("amount"), 1);
+        ItemStack item = new ItemStack(material, amount);
+        ItemMeta meta = item.getItemMeta();
+        applyName(meta, m);
+        applyLore(meta, m);
+        item.setItemMeta(meta);
+        applyEnchants(item, m);
+        applyGlow(item, m);
+        applyPotion(item, m);
         return item;
     }
 
-    private static Material material(ConfigurationSection section) {
-        String name = section.getString("material");
+    private static Material material(Map<String, Object> m) {
+        String name = str(m.get("material"));
         if (name == null) {
-            return null;
+            return Material.STONE;
         }
-        return Material.getMaterial(name.toUpperCase());
+        Material material = Material.getMaterial(name.toUpperCase());
+        return material != null ? material : Material.STONE;
     }
 
-    private static void applyMeta(ItemStack item, ConfigurationSection section) {
-        ItemMeta meta = item.getItemMeta();
-        String name = section.getString("name");
+    private static void applyName(ItemMeta meta, Map<String, Object> m) {
+        String name = str(m.get("name"));
         if (name != null) {
             meta.setDisplayName(Message.color(name));
         }
-        List<String> lore = section.getStringList("lore");
-        if (!lore.isEmpty()) {
-            meta.setLore(colorLines(lore));
-        }
-        item.setItemMeta(meta);
     }
 
-    private static List<String> colorLines(List<String> lines) {
-        List<String> colored = new ArrayList<String>();
-        for (String line : lines) {
-            colored.add(Message.color(line));
-        }
-        return colored;
-    }
-
-    private static void applyEnchants(ItemStack item, ConfigurationSection section) {
-        ConfigurationSection enchants = section.getConfigurationSection("enchants");
-        if (enchants == null) {
+    private static void applyLore(ItemMeta meta, Map<String, Object> m) {
+        Object raw = m.get("lore");
+        if (!(raw instanceof List)) {
             return;
         }
-        for (String key : enchants.getKeys(false)) {
-            Enchantment enchantment = Enchantment.getByName(key.toUpperCase());
+        List<String> lore = new ArrayList<String>();
+        for (Object line : (List<?>) raw) {
+            String text = str(line);
+            if (text != null) {
+                lore.add(Message.color(text));
+            }
+        }
+        if (!lore.isEmpty()) {
+            meta.setLore(lore);
+        }
+    }
+
+    private static void applyEnchants(ItemStack item, Map<String, Object> m) {
+        Object raw = m.get("enchants");
+        if (!(raw instanceof Map)) {
+            return;
+        }
+        for (Map.Entry<?, ?> entry : ((Map<?, ?>) raw).entrySet()) {
+            Enchantment enchantment = Enchantment.getByName(entry.getKey().toString().toUpperCase());
             if (enchantment != null) {
-                item.addUnsafeEnchantment(enchantment, enchants.getInt(key));
+                item.addUnsafeEnchantment(enchantment, num(entry.getValue(), 1));
             }
         }
     }
 
-    private static void applyPotion(ItemStack item, ConfigurationSection section) {
+    private static void applyGlow(ItemStack item, Map<String, Object> m) {
+        if (!bool(m.get("glow"))) {
+            return;
+        }
+        item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+        ItemMeta meta = item.getItemMeta();
+        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        item.setItemMeta(meta);
+    }
+
+    private static void applyPotion(ItemStack item, Map<String, Object> m) {
         if (!(item.getItemMeta() instanceof PotionMeta)) {
             return;
         }
         PotionMeta meta = (PotionMeta) item.getItemMeta();
-        applyBasePotion(meta, section);
-        applyCustomEffects(meta, section);
+        applyBasePotion(meta, m);
+        applyCustomEffects(meta, m);
         item.setItemMeta(meta);
     }
 
-    private static void applyBasePotion(PotionMeta meta, ConfigurationSection section) {
-        String potion = section.getString("potion");
+    private static void applyBasePotion(PotionMeta meta, Map<String, Object> m) {
+        String potion = str(m.get("potion"));
         if (potion == null) {
             return;
         }
@@ -95,13 +117,20 @@ public final class ItemParser {
         }
     }
 
-    private static void applyCustomEffects(PotionMeta meta, ConfigurationSection section) {
-        for (String entry : section.getStringList("potion-effects")) {
-            applyCustomEffect(meta, entry);
+    private static void applyCustomEffects(PotionMeta meta, Map<String, Object> m) {
+        Object raw = m.get("potion-effects");
+        if (!(raw instanceof List)) {
+            return;
+        }
+        for (Object entry : (List<?>) raw) {
+            applyCustomEffect(meta, str(entry));
         }
     }
 
     private static void applyCustomEffect(PotionMeta meta, String entry) {
+        if (entry == null) {
+            return;
+        }
         String[] parts = entry.split(":");
         if (parts.length != 3) {
             return;
@@ -124,5 +153,17 @@ public final class ItemParser {
         } catch (NumberFormatException ignored) {
             return 0;
         }
+    }
+
+    private static String str(Object o) {
+        return o == null ? null : o.toString();
+    }
+
+    private static int num(Object o, int def) {
+        return o instanceof Number ? ((Number) o).intValue() : def;
+    }
+
+    private static boolean bool(Object o) {
+        return o instanceof Boolean && (Boolean) o;
     }
 }

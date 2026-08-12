@@ -21,6 +21,9 @@ public class ArenaProtectionListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
+        if (event.getPlayer().hasPermission("crystalox.kitpvp.admin")) {
+            return;
+        }
         if (isInArena(event.getBlock().getLocation())) {
             event.setCancelled(true);
         }
@@ -28,6 +31,9 @@ public class ArenaProtectionListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
+        if (event.getPlayer().hasPermission("crystalox.kitpvp.admin")) {
+            return;
+        }
         if (isInArena(event.getBlock().getLocation())) {
             event.setCancelled(true);
         }
@@ -37,6 +43,9 @@ public class ArenaProtectionListener implements Listener {
     public void onInteract(PlayerInteractEvent event) {
         Block block = event.getClickedBlock();
         if (block == null || event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
+        if (event.getPlayer().hasPermission("crystalox.kitpvp.admin")) {
             return;
         }
         if (isInArena(block.getLocation())) {

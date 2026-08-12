@@ -33,13 +33,362 @@ killstreak-rewards:
 scoreboard-title: '&6&lKITPVP'
 
 kits:
+  peasant:
+    display-name: '&7Peasant'
+    icon: WOODEN_SWORD
+    description:
+      - '&7Simple villager with a'
+      - '&7wooden blade'
+    cooldown-seconds: 15
+    permission: 'none'
+    price: 0
+    items:
+      - material: WOODEN_SWORD
+        name: '&7Wooden Blade'
+      - material: APPLE
+        amount: 1
+    armor:
+      helmet: {material: LEATHER_HELMET}
+      chestplate: {material: LEATHER_CHESTPLATE}
+      leggings: {material: LEATHER_LEGGINGS}
+      boots: {material: LEATHER_BOOTS}
+    effects: []
+  scout:
+    display-name: '&aScout'
+    icon: STONE_AXE
+    description:
+      - '&7Fast skirmisher with'
+      - '&7a stone axe'
+    cooldown-seconds: 15
+    permission: 'none'
+    price: 0
+    items:
+      - material: STONE_AXE
+        name: '&aScout Axe'
+      - material: APPLE
+        amount: 2
+    armor:
+      helmet: {material: LEATHER_HELMET}
+      chestplate: {material: LEATHER_CHESTPLATE}
+      leggings: {material: LEATHER_LEGGINGS}
+      boots: {material: LEATHER_BOOTS}
+    effects:
+      - SPEED:300:0
+  fisher:
+    display-name: '&bFisher'
+    icon: FISHING_ROD
+    description:
+      - '&7Hooks enemies from'
+      - '&7a distance'
+    cooldown-seconds: 15
+    permission: 'none'
+    price: 0
+    items:
+      - material: FISHING_ROD
+        name: '&bMagic Rod'
+      - material: STONE_SWORD
+        name: '&7Bone Dagger'
+      - material: COOKED_COD
+        amount: 3
+    armor:
+      helmet: {material: LEATHER_HELMET}
+      chestplate: {material: LEATHER_CHESTPLATE}
+      leggings: {material: LEATHER_LEGGINGS}
+      boots: {material: LEATHER_BOOTS}
+    effects: []
+  thief:
+    display-name: '&8Thief'
+    icon: STONE_SWORD
+    description:
+      - '&7Sneaky backstabber,'
+      - '&7extra jump'
+    cooldown-seconds: 15
+    permission: 'none'
+    price: 0
+    items:
+      - material: STONE_SWORD
+        name: '&8Thief Dagger'
+      - material: GOLDEN_APPLE
+        amount: 1
+    armor:
+      helmet: {material: LEATHER_HELMET}
+      chestplate: {material: LEATHER_CHESTPLATE}
+      leggings: {material: LEATHER_LEGGINGS}
+      boots: {material: LEATHER_BOOTS}
+    effects:
+      - SPEED:600:1
+      - JUMP:300:1
+  miner:
+    display-name: '&6Miner'
+    icon: STONE_PICKAXE
+    description:
+      - '&7Heavy pickaxe hits,'
+      - '&7hard to stop'
+    cooldown-seconds: 15
+    permission: 'none'
+    price: 0
+    items:
+      - material: STONE_PICKAXE
+        name: '&6Miner Pick'
+        enchants:
+          SHARPNESS: 1
+      - material: BREAD
+        amount: 3
+    armor:
+      helmet: {material: GOLDEN_HELMET}
+      chestplate: {material: LEATHER_CHESTPLATE}
+      leggings: {material: LEATHER_LEGGINGS}
+      boots: {material: LEATHER_BOOTS}
+    effects:
+      - DAMAGE_RESISTANCE:300:0
+  knight:
+    display-name: '&7Knight'
+    icon: SHIELD
+    description:
+      - '&7Sword and shield,'
+      - '&7solid chain armor'
+    cooldown-seconds: 20
+    permission: 'none'
+    price: 0
+    items:
+      - material: STONE_SWORD
+        name: '&7Knight Sword'
+        enchants:
+          SHARPNESS: 1
+      - material: SHIELD
+        name: '&7Knight Shield'
+      - material: GOLDEN_APPLE
+        amount: 1
+    armor:
+      helmet: {material: CHAINMAIL_HELMET}
+      chestplate: {material: CHAINMAIL_CHESTPLATE}
+      leggings: {material: CHAINMAIL_LEGGINGS}
+      boots: {material: CHAINMAIL_BOOTS}
+    effects: []
+  ranger:
+    display-name: '&aRanger'
+    icon: BOW
+    description:
+      - '&7Bow expert with'
+      - '&7chain armor'
+    cooldown-seconds: 20
+    permission: 'none'
+    price: 0
+    items:
+      - material: BOW
+        name: '&aRanger Bow'
+        enchants:
+          POWER: 2
+      - material: ARROW
+        amount: 20
+      - material: GOLDEN_APPLE
+        amount: 1
+    armor:
+      helmet: {material: CHAINMAIL_HELMET}
+      chestplate: {material: CHAINMAIL_CHESTPLATE}
+      leggings: {material: CHAINMAIL_LEGGINGS}
+      boots: {material: CHAINMAIL_BOOTS}
+    effects:
+      - SPEED:300:0
+  hunter:
+    display-name: '&2Hunter'
+    icon: CROSSBOW
+    description:
+      - '&7Balanced: sword and'
+      - '&7a crossbow'
+    cooldown-seconds: 20
+    permission: 'none'
+    price: 0
+    items:
+      - material: CROSSBOW
+        name: '&2Hunter Crossbow'
+        enchants:
+          QUICK_CHARGE: 2
+      - material: ARROW
+        amount: 12
+      - material: STONE_SWORD
+        name: '&2Hunter Blade'
+    armor:
+      helmet: {material: LEATHER_HELMET}
+      chestplate: {material: CHAINMAIL_CHESTPLATE}
+      leggings: {material: CHAINMAIL_LEGGINGS}
+      boots: {material: LEATHER_BOOTS}
+    effects: []
+  pyromancer:
+    display-name: '&cPyromancer'
+    icon: FLINT_AND_STEEL
+    description:
+      - '&7Fire sword, burns'
+      - '&7enemies'
+    cooldown-seconds: 20
+    permission: 'none'
+    price: 0
+    items:
+      - material: STONE_SWORD
+        name: '&cFire Blade'
+        enchants:
+          FIRE_ASPECT: 1
+      - material: GOLDEN_APPLE
+        amount: 1
+    armor:
+      helmet: {material: GOLDEN_HELMET}
+      chestplate: {material: GOLDEN_CHESTPLATE}
+      leggings: {material: GOLDEN_LEGGINGS}
+      boots: {material: GOLDEN_BOOTS}
+    effects:
+      - FIRE_RESISTANCE:300:0
+  frost_mage:
+    display-name: '&bFrost Mage'
+    icon: SNOWBALL
+    description:
+      - '&7Slows enemies with'
+      - '&7ice splashes'
+    cooldown-seconds: 20
+    permission: 'none'
+    price: 0
+    items:
+      - material: STONE_SWORD
+        name: '&bFrost Blade'
+        enchants:
+          SHARPNESS: 1
+      - material: SPLASH_POTION
+        amount: 3
+        name: '&bSlow Splash'
+        potion-effects:
+          - SLOW:300:1
+    armor:
+      helmet: {material: GOLDEN_HELMET}
+      chestplate: {material: GOLDEN_CHESTPLATE}
+      leggings: {material: GOLDEN_LEGGINGS}
+      boots: {material: GOLDEN_BOOTS}
+    effects: []
+  alchemist:
+    display-name: '&2Alchemist'
+    icon: BREWING_STAND
+    description:
+      - '&7Poison and harming'
+      - '&7splashes'
+    cooldown-seconds: 20
+    permission: 'none'
+    price: 0
+    items:
+      - material: STONE_SWORD
+        name: '&2Alchemist Blade'
+      - material: SPLASH_POTION
+        amount: 2
+        name: '&2Poison Splash'
+        potion-effects:
+          - POISON:120:1
+      - material: SPLASH_POTION
+        amount: 1
+        name: '&cHarming Splash'
+        potion-effects:
+          - INSTANT_DAMAGE:1:1
+    armor:
+      helmet: {material: GOLDEN_HELMET}
+      chestplate: {material: GOLDEN_CHESTPLATE}
+      leggings: {material: GOLDEN_LEGGINGS}
+      boots: {material: GOLDEN_BOOTS}
+    effects: []
+  berserker:
+    display-name: '&cBerserker'
+    icon: GOLDEN_AXE
+    description:
+      - '&7Rage: golden axe and'
+      - '&7strength'
+    cooldown-seconds: 25
+    permission: 'none'
+    price: 0
+    items:
+      - material: GOLDEN_AXE
+        name: '&cBerserker Axe'
+        enchants:
+          SHARPNESS: 2
+      - material: GOLDEN_APPLE
+        amount: 1
+    armor:
+      helmet: {material: CHAINMAIL_HELMET}
+      chestplate: {material: CHAINMAIL_CHESTPLATE}
+      leggings: {material: CHAINMAIL_LEGGINGS}
+      boots: {material: CHAINMAIL_BOOTS}
+    effects:
+      - INCREASE_DAMAGE:300:0
+  ninja:
+    display-name: '&8Ninja'
+    icon: ENDER_PEARL
+    description:
+      - '&7Teleports and strikes'
+      - '&7from the shadows'
+    cooldown-seconds: 25
+    permission: 'none'
+    price: 0
+    items:
+      - material: STONE_SWORD
+        name: '&8Ninja Katana'
+        enchants:
+          SHARPNESS: 2
+      - material: ENDER_PEARL
+        amount: 1
+    armor:
+      helmet: {material: LEATHER_HELMET}
+      chestplate: {material: LEATHER_CHESTPLATE}
+      leggings: {material: LEATHER_LEGGINGS}
+      boots: {material: LEATHER_BOOTS}
+    effects:
+      - SPEED:600:2
+  medic:
+    display-name: '&aMedic'
+    icon: GOLDEN_APPLE
+    description:
+      - '&7Heals allies, hard'
+      - '&7to take down'
+    cooldown-seconds: 20
+    permission: 'none'
+    price: 0
+    items:
+      - material: STONE_SWORD
+        name: '&aMedic Blade'
+      - material: SPLASH_POTION
+        amount: 3
+        name: '&aHealing Splash'
+        potion-effects:
+          - INSTANT_HEALTH:1:1
+    armor:
+      helmet: {material: CHAINMAIL_HELMET}
+      chestplate: {material: CHAINMAIL_CHESTPLATE}
+      leggings: {material: CHAINMAIL_LEGGINGS}
+      boots: {material: CHAINMAIL_BOOTS}
+    effects: []
+  samurai:
+    display-name: '&eSamurai'
+    icon: STONE_SWORD
+    description:
+      - '&7Honor-bound duelist'
+      - '&7with sharp steel'
+    cooldown-seconds: 25
+    permission: 'none'
+    price: 0
+    items:
+      - material: STONE_SWORD
+        name: '&eSamurai Katana'
+        enchants:
+          SHARPNESS: 2
+      - material: GOLDEN_APPLE
+        amount: 2
+    armor:
+      helmet: {material: GOLDEN_HELMET}
+      chestplate: {material: CHAINMAIL_CHESTPLATE}
+      leggings: {material: CHAINMAIL_LEGGINGS}
+      boots: {material: CHAINMAIL_BOOTS}
+    effects:
+      - SPEED:300:0
   warrior:
     display-name: '&cWarrior'
     icon: IRON_SWORD
     description:
-      - '&7Melee fighter: iron armor,'
-      - '&7sharp blade, health boost'
-    cooldown-seconds: 20
+      - '&7Top melee: iron armor,'
+      - '&7sharp blade'
+    cooldown-seconds: 30
     permission: 'none'
     price: 0
     items:
@@ -49,99 +398,182 @@ kits:
           SHARPNESS: 2
       - material: GOLDEN_APPLE
         amount: 2
-        name: '&6Health Apple'
     armor:
-      helmet:
-        material: IRON_HELMET
-        name: '&cWarrior Helm'
-      chestplate:
-        material: IRON_CHESTPLATE
-        name: '&cWarrior Plate'
-      leggings:
-        material: IRON_LEGGINGS
-        name: '&cWarrior Legs'
-      boots:
-        material: IRON_BOOTS
-        name: '&cWarrior Boots'
+      helmet: {material: IRON_HELMET}
+      chestplate: {material: IRON_CHESTPLATE}
+      leggings: {material: IRON_LEGGINGS}
+      boots: {material: IRON_BOOTS}
     effects:
       - SPEED:600:0
-  archer:
-    display-name: '&aArcher'
+  paladin:
+    display-name: '&fPaladin'
+    icon: SHIELD
+    description:
+      - '&7Holy knight with iron'
+      - '&7chestplate and shield'
+    cooldown-seconds: 30
+    permission: 'none'
+    price: 0
+    items:
+      - material: IRON_SWORD
+        name: '&fPaladin Sword'
+        enchants:
+          SHARPNESS: 1
+      - material: SHIELD
+        name: '&fHoly Shield'
+      - material: GOLDEN_APPLE
+        amount: 2
+    armor:
+      helmet: {material: CHAINMAIL_HELMET}
+      chestplate: {material: IRON_CHESTPLATE}
+      leggings: {material: CHAINMAIL_LEGGINGS}
+      boots: {material: CHAINMAIL_BOOTS}
+    effects:
+      - ABSORPTION:600:0
+  assassin:
+    display-name: '&8Assassin'
+    icon: IRON_SWORD
+    description:
+      - '&7Deadly speed, ender'
+      - '&7pearls, iron blade'
+    cooldown-seconds: 30
+    permission: 'none'
+    price: 0
+    items:
+      - material: IRON_SWORD
+        name: '&8Assassin Blade'
+        enchants:
+          SHARPNESS: 1
+      - material: ENDER_PEARL
+        amount: 2
+    armor:
+      helmet: {material: LEATHER_HELMET}
+      chestplate: {material: LEATHER_CHESTPLATE}
+      leggings: {material: LEATHER_LEGGINGS}
+      boots: {material: LEATHER_BOOTS}
+    effects:
+      - SPEED:600:2
+      - JUMP:300:2
+  sniper:
+    display-name: '&fSniper'
     icon: BOW
     description:
-      - '&7Ranged: longbow, arrows,'
-      - '&7chainmail, speed'
-    cooldown-seconds: 20
+      - '&7Devastating longbow'
+      - '&7with power IV'
+    cooldown-seconds: 30
     permission: 'none'
     price: 0
     items:
       - material: BOW
-        name: '&aLongbow'
+        name: '&fSniper Longbow'
         enchants:
-          POWER: 3
+          POWER: 4
       - material: ARROW
         amount: 24
-      - material: GOLDEN_APPLE
-        amount: 1
-        name: '&6Health Apple'
     armor:
-      helmet:
-        material: CHAINMAIL_HELMET
-        name: '&aArcher Hood'
-      chestplate:
-        material: CHAINMAIL_CHESTPLATE
-        name: '&aArcher Vest'
-      leggings:
-        material: CHAINMAIL_LEGGINGS
-        name: '&aArcher Legs'
-      boots:
-        material: CHAINMAIL_BOOTS
-        name: '&aArcher Boots'
+      helmet: {material: CHAINMAIL_HELMET}
+      chestplate: {material: CHAINMAIL_CHESTPLATE}
+      leggings: {material: CHAINMAIL_LEGGINGS}
+      boots: {material: CHAINMAIL_BOOTS}
     effects:
-      - SPEED:600:0
-  mage:
-    display-name: '&bMage'
-    icon: SPLASH_POTION
+      - SPEED:300:0
+  warlock:
+    display-name: '&5Warlock'
+    icon: WITHER_SKELETON_SKULL
     description:
-      - '&7Potion fighter: poison splash,'
-      - '&7harming splash, speed'
+      - '&7Wither splashes and'
+      - '&7dark magic'
     cooldown-seconds: 30
     permission: 'none'
     price: 0
     items:
       - material: STONE_SWORD
-        name: '&bMage Blade'
+        name: '&5Dark Blade'
         enchants:
           SHARPNESS: 1
       - material: SPLASH_POTION
         amount: 2
-        name: '&2Poison Splash'
+        name: '&5Wither Splash'
         potion-effects:
-          - POISON:120:1
-      - material: SPLASH_POTION
-        amount: 2
-        name: '&cHarming Splash'
-        potion-effects:
-          - INSTANT_DAMAGE:1:1
-      - material: SPLASH_POTION
-        amount: 1
-        name: '&bSpeed Splash'
-        potion-effects:
-          - SPEED:600:1
+          - WITHER:200:1
     armor:
-      helmet:
-        material: LEATHER_HELMET
-        name: '&bMage Hood'
-      chestplate:
-        material: LEATHER_CHESTPLATE
-        name: '&bMage Robe'
-      leggings:
-        material: LEATHER_LEGGINGS
-        name: '&bMage Legs'
-      boots:
-        material: LEATHER_BOOTS
-        name: '&bMage Boots'
-    effects: []
+      helmet: {material: GOLDEN_HELMET}
+      chestplate: {material: GOLDEN_CHESTPLATE}
+      leggings: {material: GOLDEN_LEGGINGS}
+      boots: {material: GOLDEN_BOOTS}
+    effects:
+      - SPEED:300:0
+  tank:
+    display-name: '&7Tank'
+    icon: IRON_CHESTPLATE
+    description:
+      - '&7Iron chestplate, absorbs'
+      - '&7massive damage'
+    cooldown-seconds: 30
+    permission: 'none'
+    price: 0
+    items:
+      - material: STONE_SWORD
+        name: '&7Tank Hammer'
+        enchants:
+          SHARPNESS: 1
+      - material: GOLDEN_APPLE
+        amount: 2
+    armor:
+      helmet: {material: IRON_HELMET}
+      chestplate: {material: IRON_CHESTPLATE}
+      leggings: {material: CHAINMAIL_LEGGINGS}
+      boots: {material: CHAINMAIL_BOOTS}
+    effects:
+      - ABSORPTION:600:1
+  gladiator:
+    display-name: '&eGladiator'
+    icon: GOLDEN_SWORD
+    description:
+      - '&7Golden blade, strength'
+      - '&7of the arena'
+    cooldown-seconds: 30
+    permission: 'none'
+    price: 0
+    items:
+      - material: GOLDEN_SWORD
+        name: '&eGladiator Sword'
+        enchants:
+          SHARPNESS: 2
+      - material: GOLDEN_APPLE
+        amount: 1
+    armor:
+      helmet: {material: CHAINMAIL_HELMET}
+      chestplate: {material: CHAINMAIL_CHESTPLATE}
+      leggings: {material: CHAINMAIL_LEGGINGS}
+      boots: {material: CHAINMAIL_BOOTS}
+    effects:
+      - INCREASE_DAMAGE:300:0
+      - SPEED:300:0
+  ghost:
+    display-name: '&bGhost'
+    icon: GLASS
+    description:
+      - '&7Vanishes and strikes'
+      - '&7from nowhere'
+    cooldown-seconds: 30
+    permission: 'none'
+    price: 0
+    items:
+      - material: STONE_SWORD
+        name: '&bGhost Blade'
+        enchants:
+          SHARPNESS: 1
+      - material: GOLDEN_APPLE
+        amount: 2
+    armor:
+      helmet: {material: LEATHER_HELMET}
+      chestplate: {material: LEATHER_CHESTPLATE}
+      leggings: {material: LEATHER_LEGGINGS}
+      boots: {material: LEATHER_BOOTS}
+    effects:
+      - INVISIBILITY:400:1
+      - SPEED:600:1
 
 messages:
   join-spawn-teleport: '&7You have been teleported to the arena spawn!'

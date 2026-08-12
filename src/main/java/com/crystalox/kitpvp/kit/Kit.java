@@ -73,12 +73,11 @@ public class Kit {
 
     private static List<ItemStack> items(ConfigurationSection section) {
         List<ItemStack> items = new ArrayList<ItemStack>();
-        ConfigurationSection itemsSection = section.getConfigurationSection("items");
-        if (itemsSection == null) {
-            return items;
-        }
-        for (String key : itemsSection.getKeys(false)) {
-            items.add(ItemParser.parse(itemsSection.getConfigurationSection(key)));
+        for (Map<?, ?> m : section.getMapList("items")) {
+            ItemStack item = ItemParser.parse((Map<String, Object>) m);
+            if (item != null) {
+                items.add(item);
+            }
         }
         return items;
     }
