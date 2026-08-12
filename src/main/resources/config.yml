@@ -34,6 +34,11 @@ scoreboard-title: '&6&lKITPVP'
 
 tab-format: '&7%player% &8[&7KS:&f%streak%&8]'
 coins-per-kill: 5
+shop-villager:
+  world: MHkitpvp
+  x: -7.5
+  y: 155.0
+  z: -22.5
 arrows-per-kill: 8
 kit-give-height: 120
 crate-cost: 50
@@ -560,7 +565,8 @@ kits:
       leggings: {material: CHAINMAIL_LEGGINGS}
       boots: {material: CHAINMAIL_BOOTS}
     effects:
-      - ABSORPTION:600:1
+      - SLOW:600:0
+      - ABSORPTION:600:0
   gladiator:
     display-name: '&eGladiator'
     icon: GOLDEN_SWORD

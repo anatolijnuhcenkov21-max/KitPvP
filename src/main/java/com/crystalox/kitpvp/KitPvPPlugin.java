@@ -14,6 +14,7 @@ import com.crystalox.kitpvp.listener.JoinQuitListener;
 import com.crystalox.kitpvp.listener.SpawnDropListener;
 import com.crystalox.kitpvp.scoreboard.StatsScoreboard;
 import com.crystalox.kitpvp.shop.PlayerKitStore;
+import com.crystalox.kitpvp.shop.ShopVillager;
 import com.crystalox.kitpvp.stats.StatsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -28,6 +29,7 @@ public class KitPvPPlugin extends JavaPlugin {
     private StatsManager statsManager;
     private ArenaManager arenaManager;
     private PlayerKitStore kitStore;
+    private ShopVillager shopVillager;
 
     public static KitPvPPlugin getInstance() {
         return instance;
@@ -50,6 +52,7 @@ public class KitPvPPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SpawnDropListener(this), this);
         getServer().getPluginManager().registerEvents(new DropProtectionListener(this), this);
         new com.crystalox.kitpvp.shop.ShopGui(this);
+        shopVillager = new ShopVillager(this);
         getCommand("kit").setExecutor(new KitCommand(this));
         getCommand("kits").setExecutor(new KitCommand(this));
         getCommand("stats").setExecutor(new StatsCommand(this));
@@ -74,6 +77,9 @@ public class KitPvPPlugin extends JavaPlugin {
         statsManager.saveAllSync();
         if (kitStore != null) {
             kitStore.close();
+        }
+        if (shopVillager != null) {
+            shopVillager.shutdown();
         }
         instance = null;
     }

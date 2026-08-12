@@ -12,7 +12,9 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -84,6 +86,27 @@ public class ShopGui implements Listener {
         } else if (slot < PAGE_SIZE) {
             buyFromSlot(player, slot);
         }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        Action action = event.getAction();
+        if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) {
+            return;
+        }
+        ItemStack held = event.getPlayer().getInventory().getItemInMainHand();
+        if (!isShopDiamond(held)) {
+            return;
+        }
+        event.setCancelled(true);
+        open(event.getPlayer(), plugin);
+    }
+
+    private boolean isShopDiamond(ItemStack held) {
+        if (held == null || held.getType() != Material.DIAMOND || !held.hasItemMeta() || !held.getItemMeta().hasDisplayName()) {
+            return false;
+        }
+        return ChatColor.stripColor(held.getItemMeta().getDisplayName()).equals(SHOP_TITLE);
     }
 
     private void buyFromSlot(Player player, int slot) {
