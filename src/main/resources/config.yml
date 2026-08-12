@@ -34,6 +34,7 @@ scoreboard-title: '&6&lKITPVP'
 
 tab-format: '&7%player% &8[&7KS:&f%streak%&8]'
 coins-per-kill: 5
+arrows-per-kill: 8
 kit-give-height: 120
 crate-cost: 50
 crate-rewards:

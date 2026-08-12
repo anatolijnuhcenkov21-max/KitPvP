@@ -2,18 +2,22 @@ package com.crystalox.kitpvp.listener;
 
 import com.crystalox.kitpvp.KitPvPPlugin;
 import com.crystalox.kitpvp.arena.Arena;
-import com.crystalox.kitpvp.kit.Kit;
-import com.crystalox.kitpvp.kit.KitApplier;
+import com.crystalox.kitpvp.commands.KitCommand;
+import com.crystalox.kitpvp.shop.KitSelection;
+import com.crystalox.kitpvp.shop.ShopGui;
 import com.crystalox.kitpvp.util.Message;
+import com.crystalox.kitpvp.util.SpawnUtil;
 import com.crystalox.kitpvp.util.TabUpdater;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class DeathListener implements Listener {
 
@@ -25,18 +29,22 @@ public class DeathListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onPlayerDeath(PlayerDeathEvent event) {
+        event.getDrops().clear();
+        event.setKeepInventory(true);
         Player victim = event.getEntity();
         if (!isInArena(victim.getLocation())) {
             event.setDeathMessage(null);
             return;
         }
-        event.getDrops().clear();
         Player killer = victim.getKiller();
         if (killer == null) {
             event.setDeathMessage(noKillerMessage(victim));
             return;
         }
         plugin.getStatsManager().addKill(killer.getUniqueId());
+        if (hasBow(killer)) {
+            killer.getInventory().addItem(new ItemStack(Material.ARROW, plugin.getConfig().getInt("arrows-per-kill", 8)));
+        }
         rewardKiller(killer);
         checkKillstreakReward(killer);
         plugin.getStatsManager().addDeath(victim.getUniqueId());
@@ -46,18 +54,22 @@ public class DeathListener implements Listener {
 
     @EventHandler
     public void onPlayerRespawn(PlayerRespawnEvent event) {
-        Location respawn = event.getRespawnLocation();
-        if (!isInArena(respawn) && !isArenaWorld(respawn)) {
-            return;
-        }
-        event.setRespawnLocation(plugin.getArenaManager().getSpawn());
-        final Player player = event.getPlayer();
-        plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
-            @Override
-            public void run() {
-                applyDefaultKit(player);
+        Player player = event.getPlayer();
+        event.setRespawnLocation(SpawnUtil.randomSpawn(player.getWorld()));
+        player.getInventory().clear();
+        player.getInventory().setItem(8, KitCommand.selectorItem());
+        player.getInventory().setItem(4, ShopGui.diamondItem());
+        TabUpdater.update(player, plugin);
+        KitSelection.clear(player.getUniqueId());
+    }
+
+    private boolean hasBow(Player p) {
+        for (ItemStack item : p.getInventory().getContents()) {
+            if (item != null && (item.getType() == Material.BOW || item.getType() == Material.CROSSBOW)) {
+                return true;
             }
-        }, 1L);
+        }
+        return false;
     }
 
     private void rewardKiller(Player killer) {
@@ -112,24 +124,9 @@ public class DeathListener implements Listener {
                 .replace("%victim%", victim.getName());
     }
 
-    private void applyDefaultKit(Player player) {
-        player.getInventory().clear();
-        Kit kit = plugin.getKitManager().getDefaultKit();
-        if (kit == null) {
-            return;
-        }
-        KitApplier.apply(player, kit);
-        player.sendMessage(Message.of(messages(), "default-kit-given").replace("%kit%", kit.getId()));
-    }
-
     private boolean isInArena(Location loc) {
         Arena arena = plugin.getArenaManager().getArena();
         return arena != null && arena.isEnabled() && arena.contains(loc);
-    }
-
-    private boolean isArenaWorld(Location loc) {
-        Arena arena = plugin.getArenaManager().getArena();
-        return arena != null && arena.isEnabled() && arena.getWorld().equals(loc.getWorld());
     }
 
     private ConfigurationSection messages() {

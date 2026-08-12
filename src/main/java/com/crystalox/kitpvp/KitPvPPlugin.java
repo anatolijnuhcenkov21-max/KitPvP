@@ -9,6 +9,7 @@ import com.crystalox.kitpvp.kit.KitCooldownManager;
 import com.crystalox.kitpvp.kit.KitManager;
 import com.crystalox.kitpvp.listener.ArenaProtectionListener;
 import com.crystalox.kitpvp.listener.DeathListener;
+import com.crystalox.kitpvp.listener.DropProtectionListener;
 import com.crystalox.kitpvp.listener.JoinQuitListener;
 import com.crystalox.kitpvp.listener.SpawnDropListener;
 import com.crystalox.kitpvp.scoreboard.StatsScoreboard;
@@ -47,6 +48,7 @@ public class KitPvPPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ArenaProtectionListener(this), this);
         getServer().getPluginManager().registerEvents(new CombatListener(this), this);
         getServer().getPluginManager().registerEvents(new SpawnDropListener(this), this);
+        getServer().getPluginManager().registerEvents(new DropProtectionListener(this), this);
         new com.crystalox.kitpvp.shop.ShopGui(this);
         getCommand("kit").setExecutor(new KitCommand(this));
         getCommand("kits").setExecutor(new KitCommand(this));
