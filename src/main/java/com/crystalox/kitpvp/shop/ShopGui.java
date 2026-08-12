@@ -51,7 +51,7 @@ public class ShopGui implements Listener {
             inv.setItem(i, filler());
         }
         inv.setItem(4, infoBook());
-        inv.setItem(13, crateButton(plugin));
+        inv.setItem(13, crateButton(player, plugin));
         inv.setItem(16, dailyButton(plugin));
         inv.setItem(22, coinItem(plugin.getStatsManager().getCoins(player.getUniqueId())));
         player.openInventory(inv);
@@ -99,14 +99,16 @@ public class ShopGui implements Listener {
 
     private void rollCrate(Player player, KitPvPPlugin plugin) {
         player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1f, 1f);
-        int cost = plugin.getConfig().getInt("crate-cost", 50);
+        int cost = crateCost(player, plugin);
         StatsManager stats = plugin.getStatsManager();
         UUID uuid = player.getUniqueId();
         if (!stats.spendCoins(uuid, cost)) {
             player.sendMessage(Message.of(msgs(), "crate-no-funds").replace("%cost%", String.valueOf(cost)));
             return;
         }
+        plugin.getKitStore().incCrateCount(uuid);
         grantReward(player, plugin, pickReward(plugin.getConfig().getMapList("crate-rewards")));
+        plugin.getQuestManager().onCrate(player.getUniqueId());
         player.closeInventory();
     }
 
@@ -211,13 +213,17 @@ public class ShopGui implements Listener {
                 "&7Купить их нельзя.");
     }
 
-    private static ItemStack crateButton(KitPvPPlugin plugin) {
-        int cost = plugin.getConfig().getInt("crate-cost", 50);
+    private static ItemStack crateButton(Player player, KitPvPPlugin plugin) {
+        int cost = crateCost(player, plugin);
         return named(Material.CHEST, "&dКейс",
-                "&7Цена: &e%cost% &7монет".replace("%cost%", String.valueOf(cost)),
+                "&7Цена: &e%cost% &7монет (+10 за каждый кейс)".replace("%cost%", String.valueOf(cost)),
                 "&7Награды: монеты, алмазы,",
                 "&7незерит, золотые яблоки,",
                 "&7и ОТКРЫТИЕ КЛАССОВ!");
+    }
+
+    private static int crateCost(Player player, KitPvPPlugin plugin) {
+        return plugin.getConfig().getInt("crate-cost", 50) + plugin.getKitStore().getCrateCount(player.getUniqueId()) * 10;
     }
 
     private static ItemStack dailyButton(KitPvPPlugin plugin) {

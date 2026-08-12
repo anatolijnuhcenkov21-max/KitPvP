@@ -32,7 +32,7 @@ killstreak-rewards:
 
 scoreboard-title: '&6&lKITPVP'
 
-tab-format: '&7%player% &8[&7Серия:&f%streak%&8]'
+tab-format: '&7%player% &8[&7Серия:&f%streak% &7Монеты:&6%coins%&8]'
 coins-per-kill: 5
 killstreak-bonus:
   5: 10
@@ -54,6 +54,11 @@ class-villager:
   x: -7.5
   y: 155.0
   z: -17.5
+quest-villager:
+  world: MHkitpvp
+  x: -7.5
+  y: 155.0
+  z: -12.5
 arrows-per-kill: 8
 kit-give-height: 120
 crate-cost: 50
@@ -89,6 +94,15 @@ crate-rewards:
     amount: 2
     weight: 20
     name: '&dЭндер-жемчуги x2'
+
+quests:
+  daily:
+    kill-5: {name: '&aУбей 5 игроков', target: 5, reward: 30, period: DAILY}
+    kill-10: {name: '&aУбей 10 игроков', target: 10, reward: 80, period: DAILY}
+    crate-1: {name: '&aОткрой 1 кейс', target: 1, reward: 25, period: DAILY}
+  weekly:
+    kill-25: {name: '&eУбей 25 игроков', target: 25, reward: 200, period: WEEKLY}
+    crate-5: {name: '&eОткрой 5 кейсов', target: 5, reward: 150, period: WEEKLY}
 
 kits:
   peasant:
@@ -186,14 +200,14 @@ kits:
     permission: 'none'
     price: 0
     items:
-      - material: STONE_PICKAXE
-        name: '&6Кирка шахтёра'
+      - material: IRON_PICKAXE
+        name: '&6Шахтёрская кирка'
         enchants:
           SHARPNESS: 1
       - material: BREAD
         amount: 3
     armor:
-      helmet: {material: GOLDEN_HELMET}
+      helmet: {material: IRON_HELMET, name: '&6Шахтёрский шлем'}
       chestplate: {material: LEATHER_CHESTPLATE}
       leggings: {material: LEATHER_LEGGINGS}
       boots: {material: LEATHER_BOOTS}

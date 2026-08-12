@@ -44,6 +44,7 @@ public class DeathListener implements Listener {
             return;
         }
         plugin.getStatsManager().addKill(killer.getUniqueId());
+        plugin.getQuestManager().onKill(killer.getUniqueId());
         checkKillstreakBonus(killer);
         checkKillstreakReward(killer);
         if (hasBow(killer)) {

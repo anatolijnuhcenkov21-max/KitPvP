@@ -30,6 +30,7 @@ public class PlayerKitStore {
                 try (Statement statement = connection.createStatement()) {
                     statement.executeUpdate("CREATE TABLE IF NOT EXISTS owned(uuid TEXT, kit TEXT, PRIMARY KEY(uuid, kit))");
                     statement.executeUpdate("CREATE TABLE IF NOT EXISTS bonus(uuid TEXT PRIMARY KEY, last BIGINT)");
+                    statement.executeUpdate("CREATE TABLE IF NOT EXISTS cratecount(uuid TEXT PRIMARY KEY, count INT)");
                 }
             }
         } catch (Exception e) {
@@ -99,6 +100,35 @@ public class PlayerKitStore {
             return true;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    public int getCrateCount(UUID uuid) {
+        Connection conn = getConnection();
+        if (conn == null) {
+            return 0;
+        }
+        try (PreparedStatement statement = conn.prepareStatement("SELECT count FROM cratecount WHERE uuid = ?")) {
+            statement.setString(1, uuid.toString());
+            try (ResultSet result = statement.executeQuery()) {
+                return result.next() ? result.getInt("count") : 0;
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().warning("Failed to read crate count: " + e.getMessage());
+            return 0;
+        }
+    }
+
+    public void incCrateCount(UUID uuid) {
+        Connection conn = getConnection();
+        if (conn == null) {
+            return;
+        }
+        try (PreparedStatement statement = conn.prepareStatement("INSERT INTO cratecount(uuid, count) VALUES(?,1) ON CONFLICT(uuid) DO UPDATE SET count = count + 1")) {
+            statement.setString(1, uuid.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().warning("Failed to increment crate count: " + e.getMessage());
         }
     }
 

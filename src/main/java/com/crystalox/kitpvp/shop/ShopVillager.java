@@ -2,6 +2,7 @@ package com.crystalox.kitpvp.shop;
 
 import com.crystalox.kitpvp.KitPvPPlugin;
 import com.crystalox.kitpvp.commands.KitCommand;
+import com.crystalox.kitpvp.quest.QuestGui;
 import com.crystalox.kitpvp.util.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -49,6 +50,8 @@ public class ShopVillager implements Listener {
             if (KitCommand.INSTANCE != null) {
                 KitCommand.INSTANCE.openKitGui(event.getPlayer());
             }
+        } else if ("Квесты".equals(name)) {
+            QuestGui.open(event.getPlayer(), plugin);
         }
     }
 
@@ -69,6 +72,7 @@ public class ShopVillager implements Listener {
     private void spawnAll() {
         spawnNpc("shop");
         spawnNpc("class");
+        spawnNpc("quests");
     }
 
     private void spawnNpc(String key) {
@@ -104,7 +108,14 @@ public class ShopVillager implements Listener {
         v.setCollidable(false);
         v.setGravity(false);
         v.setPersistent(true);
-        String name = key.equals("shop") ? "&6&lМагазин" : "&a&lВыбор класса";
+        String name;
+        if (key.equals("shop")) {
+            name = "&6&lМагазин";
+        } else if (key.equals("quests")) {
+            name = "&d&lКвесты";
+        } else {
+            name = "&a&lВыбор класса";
+        }
         v.setCustomName(Message.color(name));
         v.setCustomNameVisible(true);
         try {
@@ -122,7 +133,8 @@ public class ShopVillager implements Listener {
         BlockState state = block.getState();
         if (state instanceof Sign) {
             Sign sign = (Sign) state;
-            sign.setLine(0, key.equals("shop") ? "§6Магазин" : "§aВыбор класса");
+            String line = key.equals("shop") ? "§6Магазин" : (key.equals("quests") ? "§dКвесты" : "§aВыбор класса");
+            sign.setLine(0, line);
             sign.update();
         }
     }
@@ -144,11 +156,11 @@ public class ShopVillager implements Listener {
             return false;
         }
         String name = ChatColor.stripColor(entity.getCustomName());
-        return name.equals("Магазин") || name.equals("Выбор класса");
+        return name.equals("Магазин") || name.equals("Выбор класса") || name.equals("Квесты");
     }
 
     private Location loc(String key) {
-        String section = key.equals("shop") ? "shop-villager" : "class-villager";
+        String section = key.equals("shop") ? "shop-villager" : (key.equals("quests") ? "quest-villager" : "class-villager");
         ConfigurationSection cfg = plugin.getConfig().getConfigurationSection(section);
         if (cfg == null) {
             return null;

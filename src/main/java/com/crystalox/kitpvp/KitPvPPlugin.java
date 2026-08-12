@@ -6,6 +6,7 @@ import com.crystalox.kitpvp.commands.ArenaCommand;
 import com.crystalox.kitpvp.commands.KitCommand;
 import com.crystalox.kitpvp.commands.StatsCommand;
 import com.crystalox.kitpvp.commands.TopCommand;
+import com.crystalox.kitpvp.gui.LeaderboardGui;
 import com.crystalox.kitpvp.kit.KitCooldownManager;
 import com.crystalox.kitpvp.kit.KitManager;
 import com.crystalox.kitpvp.listener.ArenaProtectionListener;
@@ -13,7 +14,8 @@ import com.crystalox.kitpvp.listener.DeathListener;
 import com.crystalox.kitpvp.listener.DropProtectionListener;
 import com.crystalox.kitpvp.listener.JoinQuitListener;
 import com.crystalox.kitpvp.listener.SpawnDropListener;
-import com.crystalox.kitpvp.listener.StatSign;
+import com.crystalox.kitpvp.quest.QuestGui;
+import com.crystalox.kitpvp.quest.QuestManager;
 import com.crystalox.kitpvp.scoreboard.StatsScoreboard;
 import com.crystalox.kitpvp.shop.PlayerKitStore;
 import com.crystalox.kitpvp.shop.ShopVillager;
@@ -32,6 +34,7 @@ public class KitPvPPlugin extends JavaPlugin {
     private ArenaManager arenaManager;
     private PlayerKitStore kitStore;
     private ShopVillager shopVillager;
+    private QuestManager questManager;
 
     public static KitPvPPlugin getInstance() {
         return instance;
@@ -46,6 +49,7 @@ public class KitPvPPlugin extends JavaPlugin {
         statsManager = new StatsManager(this);
         arenaManager = new ArenaManager(this);
         kitStore = new PlayerKitStore(this);
+        questManager = new QuestManager(this);
         clearArenaWeather();
         getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
         getServer().getPluginManager().registerEvents(new DeathListener(this), this);
@@ -54,13 +58,14 @@ public class KitPvPPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SpawnDropListener(this), this);
         getServer().getPluginManager().registerEvents(new DropProtectionListener(this), this);
         new com.crystalox.kitpvp.shop.ShopGui(this);
+        new QuestGui(this);
         shopVillager = new ShopVillager(this);
         getCommand("kit").setExecutor(new KitCommand(this));
         getCommand("kits").setExecutor(new KitCommand(this));
         getCommand("stats").setExecutor(new StatsCommand(this));
         getCommand("top").setExecutor(new TopCommand(this));
         getCommand("kitpvp").setExecutor(new ArenaCommand(this));
-        new StatSign(this);
+        new LeaderboardGui(this);
         new StatsScoreboard(this).start();
         getLogger().info("KitPvP v" + getDescription().getVersion() + " enabled");
     }
@@ -81,6 +86,9 @@ public class KitPvPPlugin extends JavaPlugin {
         statsManager.saveAllSync();
         if (kitStore != null) {
             kitStore.close();
+        }
+        if (questManager != null) {
+            questManager.close();
         }
         if (shopVillager != null) {
             shopVillager.shutdown();
@@ -106,5 +114,9 @@ public class KitPvPPlugin extends JavaPlugin {
 
     public PlayerKitStore getKitStore() {
         return kitStore;
+    }
+
+    public QuestManager getQuestManager() {
+        return questManager;
     }
 }

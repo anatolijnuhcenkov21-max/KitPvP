@@ -2,7 +2,9 @@ package com.crystalox.kitpvp.listener;
 
 import com.crystalox.kitpvp.KitPvPPlugin;
 import com.crystalox.kitpvp.arena.Arena;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,7 +26,7 @@ public class ArenaProtectionListener implements Listener {
         if (event.getPlayer().hasPermission("crystalox.kitpvp.admin")) {
             return;
         }
-        if (isInArena(event.getBlock().getLocation())) {
+        if (isProtected(event.getBlock().getLocation())) {
             event.setCancelled(true);
         }
     }
@@ -34,7 +36,7 @@ public class ArenaProtectionListener implements Listener {
         if (event.getPlayer().hasPermission("crystalox.kitpvp.admin")) {
             return;
         }
-        if (isInArena(event.getBlock().getLocation())) {
+        if (isProtected(event.getBlock().getLocation())) {
             event.setCancelled(true);
         }
     }
@@ -56,5 +58,22 @@ public class ArenaProtectionListener implements Listener {
     private boolean isInArena(Location loc) {
         Arena arena = plugin.getArenaManager().getArena();
         return arena != null && arena.isEnabled() && arena.contains(loc);
+    }
+
+    private boolean isProtected(Location loc) {
+        return isInArena(loc) || isPvpWorld(loc);
+    }
+
+    private boolean isPvpWorld(Location loc) {
+        World world = pvpWorld();
+        return world != null && loc.getWorld().equals(world);
+    }
+
+    private World pvpWorld() {
+        Arena arena = plugin.getArenaManager().getArena();
+        if (arena != null && arena.getWorld() != null) {
+            return arena.getWorld();
+        }
+        return Bukkit.getWorld(plugin.getConfig().getString("arena.world", "world"));
     }
 }
