@@ -3,6 +3,7 @@ package com.crystalox.kitpvp;
 import com.crystalox.kitpvp.arena.ArenaManager;
 import com.crystalox.kitpvp.combat.CombatListener;
 import com.crystalox.kitpvp.commands.ArenaCommand;
+import com.crystalox.kitpvp.commands.CoinsCommand;
 import com.crystalox.kitpvp.event.EventManager;
 import com.crystalox.kitpvp.commands.KitCommand;
 import com.crystalox.kitpvp.commands.StatsCommand;
@@ -68,6 +69,8 @@ public class KitPvPPlugin extends JavaPlugin {
         getCommand("stats").setExecutor(new StatsCommand(this));
         getCommand("top").setExecutor(new TopCommand(this));
         getCommand("kitpvp").setExecutor(new ArenaCommand(this));
+        getCommand("coins").setExecutor(new CoinsCommand(this));
+        getCommand("coins").setTabCompleter(new CoinsCommand(this));
         new LeaderboardGui(this);
         new StatsScoreboard(this).start();
         getLogger().info("KitPvP v" + getDescription().getVersion() + " enabled");

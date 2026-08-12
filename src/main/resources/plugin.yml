@@ -21,6 +21,10 @@ commands:
   kitpvp:
     description: Админ-команды KitPvP
     usage: /kitpvp <pos1|pos2|savearena|setspawn|reload>
+  coins:
+    description: '&7Выдача монет (только для админов)'
+    usage: /coins <give|set> <amount> [player]
+    permission: crystalox.kitpvp.admin
 
 permissions:
   crystalox.kitpvp.admin:
