@@ -85,6 +85,7 @@ public class ShopVillager implements Listener {
             plugin.getLogger().warning("NPC " + key + ": spawn failed: " + e.getMessage());
             return;
         }
+        v.setRotation(-90f, 0f);
         configure(v, key);
         npcs.put(key, v);
         plugin.getLogger().info("NPC " + key + " spawned at " + ground.getBlockX() + "," + ground.getBlockY() + "," + ground.getBlockZ());

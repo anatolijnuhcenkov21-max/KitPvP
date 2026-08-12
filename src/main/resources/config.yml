@@ -66,6 +66,9 @@ crate-rewards:
     amount: 1
     weight: 3
     name: '&cNetherite Ingot'
+  - type: CLASS
+    weight: 12
+    name: '&dRandom Class Unlock'
   - type: ITEM
     material: GOLDEN_APPLE
     amount: 2
@@ -649,6 +652,8 @@ messages:
   death-format-nokiller: '&7%victim% &8died'
   class-selected: '&aClass &e%kit% &aselected! Jump off the spawn to receive it.'
   class-bought: '&aYou bought class &e%kit% &afor &6%cost% coins&a!'
+  class-locked: '&cThis class is locked! Unlock it in Kit Shop crates.'
+  class-unlocked: '&aYou unlocked class &e%kit%&a!'
   kit-already-owned: '&e%kit% &cis already owned.'
   coins-not-enough: '&cYou need &6%cost% coins&c. You have &6%coins%&c.'
   coins-earned: '&6+%amount% coins'

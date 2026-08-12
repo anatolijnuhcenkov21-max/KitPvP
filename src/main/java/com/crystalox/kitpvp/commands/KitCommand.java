@@ -3,8 +3,6 @@ package com.crystalox.kitpvp.commands;
 import com.crystalox.kitpvp.KitPvPPlugin;
 import com.crystalox.kitpvp.kit.Kit;
 import com.crystalox.kitpvp.shop.KitSelection;
-import com.crystalox.kitpvp.stats.StatsManager;
-import com.crystalox.kitpvp.util.Format;
 import com.crystalox.kitpvp.util.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,7 +22,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class KitCommand implements CommandExecutor, Listener {
 
@@ -71,29 +68,11 @@ public class KitCommand implements CommandExecutor, Listener {
             sendCooldownMessage(player, kit);
             return;
         }
-        if (kit.getPrice() > 0 && !plugin.getKitStore().owns(player.getUniqueId(), kit.getId())) {
-            if (!buyKit(player, kit)) {
-                return;
-            }
+        if (isLocked(player, kit)) {
+            player.sendMessage(msg("class-locked").replace("%kit%", kit.getDisplayName()));
+            return;
         }
         select(player, kit);
-    }
-
-    private boolean buyKit(Player player, Kit kit) {
-        UUID uuid = player.getUniqueId();
-        StatsManager stats = plugin.getStatsManager();
-        int cost = (int) kit.getPrice();
-        if (stats.spendCoins(uuid, cost)) {
-            plugin.getKitStore().buy(uuid, kit.getId());
-            player.sendMessage(msg("class-bought")
-                    .replace("%kit%", kit.getDisplayName())
-                    .replace("%cost%", String.valueOf(cost)));
-            return true;
-        }
-        player.sendMessage(msg("coins-not-enough")
-                .replace("%cost%", String.valueOf(cost))
-                .replace("%coins%", String.valueOf(stats.getCoins(uuid))));
-        return false;
     }
 
     private void select(Player player, Kit kit) {
@@ -128,10 +107,19 @@ public class KitCommand implements CommandExecutor, Listener {
         for (String line : kit.getDescription()) {
             lore.add(Message.color(line));
         }
-        lore.add(Message.color(stateLine(player, kit)));
+        if (isLocked(player, kit)) {
+            lore.add(Message.color("&cLocked"));
+            lore.add(Message.color("&7Unlock in Kit Shop crates"));
+        } else {
+            lore.add(Message.color(stateLine(player, kit)));
+        }
         meta.setLore(lore);
         icon.setItemMeta(meta);
         return icon;
+    }
+
+    private boolean isLocked(Player player, Kit kit) {
+        return kit.getPrice() > 0 && !plugin.getKitStore().owns(player.getUniqueId(), kit.getId());
     }
 
     private String stateLine(Player player, Kit kit) {
@@ -139,7 +127,7 @@ public class KitCommand implements CommandExecutor, Listener {
             return "&aOwned";
         }
         if (kit.getPrice() > 0) {
-            return "&6Price: &f%price% &6coins".replace("%price%", Format.number(kit.getPrice()));
+            return "&cLocked";
         }
         return "&aFree";
     }
@@ -164,6 +152,11 @@ public class KitCommand implements CommandExecutor, Listener {
         Player player = (Player) event.getWhoClicked();
         for (Kit kit : plugin.getKitManager().getKits()) {
             if (Message.color(kit.getDisplayName()).equals(displayName)) {
+                if (isLocked(player, kit)) {
+                    player.sendMessage(msg("class-locked").replace("%kit%", kit.getDisplayName()));
+                    player.closeInventory();
+                    return;
+                }
                 select(player, kit);
                 player.closeInventory();
                 return;
