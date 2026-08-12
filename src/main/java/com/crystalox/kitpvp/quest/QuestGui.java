@@ -64,6 +64,10 @@ public class QuestGui implements Listener {
         if (quest == null) {
             return;
         }
+        if (plugin.getQuestManager().isOnCooldown(player.getUniqueId(), quest)) {
+            player.sendMessage(Message.color("&cКвест ещё восстанавливается!"));
+            return;
+        }
         if (plugin.getQuestManager().getProgress(player.getUniqueId(), quest) < quest.getTarget()) {
             player.sendMessage(Message.color("&cКвест ещё не выполнен!"));
             return;
@@ -104,20 +108,29 @@ public class QuestGui implements Listener {
     }
 
     private static ItemStack questItem(Player player, KitPvPPlugin plugin, Quest quest) {
-        int progress = plugin.getQuestManager().getProgress(player.getUniqueId(), quest);
+        QuestManager manager = plugin.getQuestManager();
+        int progress = manager.getProgress(player.getUniqueId(), quest);
         boolean complete = progress >= quest.getTarget();
+        boolean cooldown = manager.isOnCooldown(player.getUniqueId(), quest);
         List<String> lore = new ArrayList<String>();
-        lore.add(Message.color("&7Прогресс: &f" + progress + "&7/&f" + quest.getTarget()));
+        if (cooldown) {
+            long remaining = manager.remainingCooldown(player.getUniqueId(), quest);
+            long hours = remaining / 3600000;
+            long minutes = (remaining % 3600000) / 60000;
+            lore.add(Message.color("&7Доступно через: &e" + hours + "ч " + minutes + "м"));
+        } else {
+            lore.add(Message.color("&7Прогресс: &f" + progress + "&7/&f" + quest.getTarget()));
+        }
         if (quest.getKit() != null) {
             Kit kit = plugin.getKitManager().getKit(quest.getKit());
             String kitName = kit != null ? kit.getDisplayName() : quest.getKit();
             lore.add(Message.color("&7Класс: &f" + kitName));
         }
         lore.add(Message.color("&6Награда: &f" + quest.getReward() + " монет"));
-        if (complete) {
+        if (complete && !cooldown) {
             lore.add(Message.color("&aНажми, чтобы забрать!"));
         }
-        return named(complete ? Material.SUNFLOWER : Material.PAPER, quest.getName(), lore);
+        return named(cooldown ? Material.BARRIER : (complete ? Material.SUNFLOWER : Material.PAPER), quest.getName(), lore);
     }
 
     private static ItemStack filler() {

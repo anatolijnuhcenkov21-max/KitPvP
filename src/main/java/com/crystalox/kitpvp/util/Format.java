@@ -21,6 +21,12 @@ public final class Format {
         return seconds + "с";
     }
 
+    public static String timeFull(long ms) {
+        long hours = ms / 3600000;
+        long minutes = (ms % 3600000) / 60000;
+        return hours + "ч " + minutes + "м";
+    }
+
     public static String number(double v) {
         return NUMBER_FORMAT.format(v);
     }

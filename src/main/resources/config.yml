@@ -390,28 +390,118 @@ kits:
       boots: {material: LEATHER_BOOTS}
     effects:
       - SPEED:600:2
-  medic:
-    display-name: '&aМедик'
-    icon: GOLDEN_APPLE
+  pirate:
+    display-name: '&eПират'
+    icon: FISHING_ROD
     description:
-      - '&7Лечит союзников, живучий'
-    cooldown-seconds: 20
+      - '&7Золотой клинок, крюк,'
+      - '&7морская скорость'
+    cooldown-seconds: 25
     permission: 'none'
-    price: 50
+    price: 70
     items:
-      - material: STONE_SWORD
-        name: '&aКлинок медика'
-      - material: SPLASH_POTION
-        amount: 3
-        name: '&aЛечащий сплэш'
-        potion-effects:
-          - INSTANT_HEALTH:1:1
+      - material: GOLDEN_SWORD
+        name: '&eПиратский клинок'
+        enchants:
+          SHARPNESS: 1
+      - material: FISHING_ROD
+        name: '&eАбордажный крюк'
+      - material: GOLDEN_APPLE
+        amount: 1
+        name: '&6Яблоко'
     armor:
       helmet: {material: CHAINMAIL_HELMET}
       chestplate: {material: CHAINMAIL_CHESTPLATE}
       leggings: {material: CHAINMAIL_LEGGINGS}
       boots: {material: CHAINMAIL_BOOTS}
+    effects:
+      - SPEED:300:0
+  bard:
+    display-name: '&dБард'
+    icon: NOTE_BLOCK
+    description:
+      - '&7Поддерживает союзников,'
+      - '&7лечит сплэшами'
+    cooldown-seconds: 25
+    permission: 'none'
+    price: 60
+    items:
+      - material: GOLDEN_SWORD
+        name: '&dЛютня-меч'
+        enchants:
+          SHARPNESS: 1
+      - material: SPLASH_POTION
+        amount: 2
+        name: '&aЛечебный сплэш'
+        potion-effects:
+          - INSTANT_HEALTH:1:1
+      - material: SPLASH_POTION
+        amount: 1
+        name: '&bСплэш скорости'
+        potion-effects:
+          - SPEED:600:1
+    armor:
+      helmet: {material: GOLDEN_HELMET}
+      chestplate: {material: GOLDEN_CHESTPLATE}
+      leggings: {material: GOLDEN_LEGGINGS}
+      boots: {material: GOLDEN_BOOTS}
     effects: []
+  vampire:
+    display-name: '&cВампир'
+    icon: REDSTONE
+    description:
+      - '&7Восстанавливается'
+      - '&7после ударов'
+    cooldown-seconds: 25
+    permission: 'none'
+    price: 90
+    items:
+      - material: STONE_SWORD
+        name: '&cКлык вампира'
+        enchants:
+          SHARPNESS: 2
+      - material: GOLDEN_APPLE
+        amount: 1
+        name: '&6Яблоко'
+    armor:
+      helmet: {material: LEATHER_HELMET}
+      chestplate: {material: LEATHER_CHESTPLATE}
+      leggings: {material: LEATHER_LEGGINGS}
+      boots: {material: LEATHER_BOOTS}
+    effects:
+      - REGENERATION:300:0
+      - SPEED:300:0
+  druid:
+    display-name: '&2Друид'
+    icon: OAK_SAPLING
+    description:
+      - '&7Яды и регенерация,'
+      - '&7прыжок леса'
+    cooldown-seconds: 25
+    permission: 'none'
+    price: 80
+    items:
+      - material: STONE_SWORD
+        name: '&2Посох друида'
+        enchants:
+          SHARPNESS: 1
+      - material: SPLASH_POTION
+        amount: 1
+        name: '&2Сплэш яда'
+        potion-effects:
+          - POISON:200:1
+      - material: SPLASH_POTION
+        amount: 2
+        name: '&aСплэш регенерации'
+        potion-effects:
+          - REGENERATION:300:1
+    armor:
+      helmet: {material: LEATHER_HELMET}
+      chestplate: {material: LEATHER_CHESTPLATE}
+      leggings: {material: LEATHER_LEGGINGS}
+      boots: {material: LEATHER_BOOTS}
+    effects:
+      - JUMP:300:1
   samurai:
     display-name: '&eСамурай'
     icon: STONE_SWORD

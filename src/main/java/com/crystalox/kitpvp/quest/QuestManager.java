@@ -21,10 +21,12 @@ public class QuestManager {
     private static class QuestRow {
         final int progress;
         final String periodKey;
+        final long claimedAt;
 
-        QuestRow(int progress, String periodKey) {
+        QuestRow(int progress, String periodKey, long claimedAt) {
             this.progress = progress;
             this.periodKey = periodKey;
+            this.claimedAt = claimedAt;
         }
     }
 
@@ -68,6 +70,10 @@ public class QuestManager {
     public int getProgress(UUID uuid, Quest quest) {
         QuestRow row = read(uuid, quest.getId());
         if (row == null) {
+            return 0;
+        }
+        if (row.claimedAt > 0 && System.currentTimeMillis() - row.claimedAt >= periodMillis(quest.getPeriod())) {
+            clearClaimedAt(uuid, quest.getId());
             return 0;
         }
         String key = currentKey(quest.getPeriod());
@@ -125,8 +131,35 @@ public class QuestManager {
         if (getProgress(uuid, quest) < quest.getTarget()) {
             return false;
         }
-        reset(uuid, quest.getId());
-        return true;
+        Connection conn = getConnection();
+        if (conn == null) {
+            return false;
+        }
+        try (PreparedStatement statement = conn.prepareStatement("UPDATE quests SET progress = 0, claimed_at = ? WHERE uuid = ? AND quest = ?")) {
+            statement.setLong(1, System.currentTimeMillis());
+            statement.setString(2, uuid.toString());
+            statement.setString(3, quest.getId());
+            statement.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            plugin.getLogger().warning("Failed to claim quest: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean isOnCooldown(UUID uuid, Quest quest) {
+        long claimedAt = readClaimedAt(uuid, quest.getId());
+        if (claimedAt == 0) {
+            return false;
+        }
+        return System.currentTimeMillis() - claimedAt < periodMillis(quest.getPeriod());
+    }
+
+    public long remainingCooldown(UUID uuid, Quest quest) {
+        if (!isOnCooldown(uuid, quest)) {
+            return 0L;
+        }
+        return periodMillis(quest.getPeriod()) - (System.currentTimeMillis() - readClaimedAt(uuid, quest.getId()));
     }
 
     public List<Quest> getDaily() {
@@ -154,7 +187,11 @@ public class QuestManager {
                 Class.forName("org.sqlite.JDBC");
                 connection = DriverManager.getConnection("jdbc:sqlite:" + file.getAbsolutePath());
                 try (Statement statement = connection.createStatement()) {
-                    statement.executeUpdate("CREATE TABLE IF NOT EXISTS quests(uuid TEXT, quest TEXT, progress INT, period_key TEXT, PRIMARY KEY(uuid, quest))");
+                    statement.executeUpdate("CREATE TABLE IF NOT EXISTS quests(uuid TEXT, quest TEXT, progress INT, period_key TEXT, claimed_at BIGINT DEFAULT 0, PRIMARY KEY(uuid, quest))");
+                    try {
+                        statement.executeUpdate("ALTER TABLE quests ADD COLUMN claimed_at BIGINT DEFAULT 0");
+                    } catch (SQLException ignored) {
+                    }
                 }
             }
         } catch (Exception e) {
@@ -168,14 +205,14 @@ public class QuestManager {
         if (conn == null) {
             return null;
         }
-        try (PreparedStatement statement = conn.prepareStatement("SELECT progress, period_key FROM quests WHERE uuid = ? AND quest = ?")) {
+        try (PreparedStatement statement = conn.prepareStatement("SELECT progress, period_key, claimed_at FROM quests WHERE uuid = ? AND quest = ?")) {
             statement.setString(1, uuid.toString());
             statement.setString(2, questId);
             try (ResultSet result = statement.executeQuery()) {
                 if (!result.next()) {
                     return null;
                 }
-                return new QuestRow(result.getInt("progress"), result.getString("period_key"));
+                return new QuestRow(result.getInt("progress"), result.getString("period_key"), result.getLong("claimed_at"));
             }
         } catch (SQLException e) {
             plugin.getLogger().warning("Failed to load quest row: " + e.getMessage());
@@ -214,17 +251,41 @@ public class QuestManager {
         }
     }
 
-    private void reset(UUID uuid, String questId) {
+    private long readClaimedAt(UUID uuid, String questId) {
+        Connection conn = getConnection();
+        if (conn == null) {
+            return 0L;
+        }
+        try (PreparedStatement statement = conn.prepareStatement("SELECT claimed_at FROM quests WHERE uuid = ? AND quest = ?")) {
+            statement.setString(1, uuid.toString());
+            statement.setString(2, questId);
+            try (ResultSet result = statement.executeQuery()) {
+                return result.next() ? result.getLong("claimed_at") : 0L;
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().warning("Failed to load quest cooldown: " + e.getMessage());
+            return 0L;
+        }
+    }
+
+    private void clearClaimedAt(UUID uuid, String questId) {
         Connection conn = getConnection();
         if (conn == null) {
             return;
         }
-        try (PreparedStatement statement = conn.prepareStatement("UPDATE quests SET progress = 0 WHERE uuid = ? AND quest = ?")) {
+        try (PreparedStatement statement = conn.prepareStatement("UPDATE quests SET claimed_at = 0 WHERE uuid = ? AND quest = ?")) {
             statement.setString(1, uuid.toString());
             statement.setString(2, questId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            plugin.getLogger().warning("Failed to reset quest: " + e.getMessage());
+            plugin.getLogger().warning("Failed to clear quest cooldown: " + e.getMessage());
         }
+    }
+
+    private long periodMillis(String period) {
+        if ("WEEKLY".equals(period)) {
+            return 7L * 24L * 3600L * 1000L;
+        }
+        return 24L * 3600L * 1000L;
     }
 }
