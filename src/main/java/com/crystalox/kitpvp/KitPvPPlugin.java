@@ -49,7 +49,7 @@ public class KitPvPPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        statsManager.saveAll();
+        statsManager.saveAllSync();
         instance = null;
     }
 

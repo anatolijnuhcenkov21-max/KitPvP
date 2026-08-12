@@ -149,6 +149,16 @@ public class StatsManager {
         });
     }
 
+    public void saveAllSync() {
+        for (StatsEntry entry : cache.values()) {
+            try {
+                write(entry);
+            } catch (Exception e) {
+                plugin.getLogger().warning("Failed to save stats for " + entry.uuid + ": " + e.getMessage());
+            }
+        }
+    }
+
     public void save(UUID uuid) {
         StatsEntry entry = cache.get(uuid);
         if (entry == null) {
