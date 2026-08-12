@@ -39,6 +39,11 @@ shop-villager:
   x: -7.5
   y: 155.0
   z: -22.5
+class-villager:
+  world: MHkitpvp
+  x: -7.5
+  y: 155.0
+  z: -17.5
 arrows-per-kill: 8
 kit-give-height: 120
 crate-cost: 50

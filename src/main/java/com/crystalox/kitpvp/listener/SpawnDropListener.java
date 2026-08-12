@@ -1,11 +1,9 @@
 package com.crystalox.kitpvp.listener;
 
 import com.crystalox.kitpvp.KitPvPPlugin;
-import com.crystalox.kitpvp.commands.KitCommand;
 import com.crystalox.kitpvp.kit.Kit;
 import com.crystalox.kitpvp.kit.KitApplier;
 import com.crystalox.kitpvp.shop.KitSelection;
-import com.crystalox.kitpvp.shop.ShopGui;
 import com.crystalox.kitpvp.util.Message;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -66,8 +64,6 @@ public class SpawnDropListener implements Listener {
         KitApplier.apply(p, kit);
         p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 200, 0, true, false));
         FALL_IMMUNE.add(p.getUniqueId());
-        p.getInventory().setItem(8, KitCommand.selectorItem());
-        p.getInventory().setItem(4, ShopGui.diamondItem());
         p.sendMessage(Message.of(msgs, "kit-given").replace("%kit%", kit.getDisplayName()));
     }
 

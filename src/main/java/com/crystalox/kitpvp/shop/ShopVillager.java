@@ -1,6 +1,7 @@
 package com.crystalox.kitpvp.shop;
 
 import com.crystalox.kitpvp.KitPvPPlugin;
+import com.crystalox.kitpvp.commands.KitCommand;
 import com.crystalox.kitpvp.util.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,74 +16,94 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class ShopVillager implements Listener {
 
     private final KitPvPPlugin plugin;
-    private Villager villager;
+    private final Map<String, Villager> npcs = new ConcurrentHashMap<String, Villager>();
 
     public ShopVillager(KitPvPPlugin plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
-        plugin.getServer().getScheduler().runTaskLater(plugin, this::spawn, 40L);
-        plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
-            if (!isAlive()) {
-                spawn();
-            }
-        }, 200L, 200L);
+        plugin.getServer().getScheduler().runTaskLater(plugin, this::spawnAll, 40L);
+        plugin.getServer().getScheduler().runTaskTimer(plugin, this::spawnAll, 200L, 200L);
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onInteract(PlayerInteractEntityEvent event) {
-        if (!isShopVillager(event.getRightClicked())) {
+        if (!isNpc(event.getRightClicked())) {
             return;
         }
         event.setCancelled(true);
-        ShopGui.open(event.getPlayer(), plugin);
+        String name = ChatColor.stripColor(event.getRightClicked().getCustomName());
+        if ("Kit Shop".equals(name)) {
+            ShopGui.open(event.getPlayer(), plugin);
+        } else if ("Class Selector".equals(name)) {
+            if (KitCommand.INSTANCE != null) {
+                KitCommand.INSTANCE.openKitGui(event.getPlayer());
+            }
+        }
     }
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
-        if (!isShopVillager(event.getEntity())) {
-            return;
+        if (isNpc(event.getEntity())) {
+            event.setCancelled(true);
         }
-        event.setCancelled(true);
     }
 
     public void shutdown() {
-        if (villager != null) {
-            villager.remove();
-            villager = null;
+        for (Villager v : npcs.values()) {
+            v.remove();
         }
+        npcs.clear();
     }
 
-    private void spawn() {
-        if (villager != null && villager.isValid()) {
+    private void spawnAll() {
+        spawnNpc("shop");
+        spawnNpc("class");
+    }
+
+    private void spawnNpc(String key) {
+        Villager v = npcs.get(key);
+        if (v != null && v.isValid()) {
             return;
         }
-        Location location = loc();
+        Location location = loc(key);
         if (location == null || location.getWorld() == null) {
-            plugin.getLogger().warning("Shop villager: config location is invalid");
+            plugin.getLogger().warning("NPC " + key + ": config location invalid");
             return;
         }
         World world = location.getWorld();
         world.loadChunk(location.getBlockX() >> 4, location.getBlockZ() >> 4);
         Location ground = ground(world, location);
         try {
-            villager = (Villager) world.spawnEntity(ground, EntityType.VILLAGER);
+            v = (Villager) world.spawnEntity(ground, EntityType.VILLAGER);
         } catch (Exception e) {
-            plugin.getLogger().warning("Shop villager: spawn failed: " + e.getMessage());
+            plugin.getLogger().warning("NPC " + key + ": spawn failed: " + e.getMessage());
             return;
         }
-        villager.setAI(false);
-        villager.setSilent(true);
-        villager.setInvulnerable(true);
-        villager.setCollidable(false);
-        villager.setGravity(false);
-        villager.setPersistent(true);
-        villager.setCustomName(Message.color("&6&lKit Shop"));
-        villager.setCustomNameVisible(true);
-        setProfession();
-        plugin.getLogger().info("Shop villager spawned at " + ground.getBlockX() + "," + ground.getBlockY() + "," + ground.getBlockZ());
+        configure(v, key);
+        npcs.put(key, v);
+        plugin.getLogger().info("NPC " + key + " spawned at " + ground.getBlockX() + "," + ground.getBlockY() + "," + ground.getBlockZ());
+    }
+
+    private void configure(Villager v, String key) {
+        v.setAI(false);
+        v.setSilent(true);
+        v.setInvulnerable(true);
+        v.setCollidable(false);
+        v.setGravity(false);
+        v.setPersistent(true);
+        String name = key.equals("shop") ? "&6&lKit Shop" : "&a&lClass Selector";
+        v.setCustomName(Message.color(name));
+        v.setCustomNameVisible(true);
+        try {
+            v.setProfession(Villager.Profession.LIBRARIAN);
+        } catch (Exception ignored) {
+        }
     }
 
     private Location ground(World world, Location location) {
@@ -94,29 +115,20 @@ public class ShopVillager implements Listener {
         return new Location(world, location.getX(), location.getY(), location.getZ(), 0f, 0f);
     }
 
-    private void setProfession() {
-        try {
-            villager.setProfession(Villager.Profession.LIBRARIAN);
-        } catch (Exception ignored) {
-        }
-    }
-
-    private boolean isAlive() {
-        return villager != null && villager.isValid() && !villager.isDead();
-    }
-
-    private boolean isShopVillager(Entity entity) {
-        if (isAlive() && entity == villager) {
+    private boolean isNpc(Entity entity) {
+        if (npcs.containsValue(entity)) {
             return true;
         }
         if (!(entity instanceof Villager) || entity.getCustomName() == null) {
             return false;
         }
-        return ChatColor.stripColor(entity.getCustomName()).equals("Kit Shop");
+        String name = ChatColor.stripColor(entity.getCustomName());
+        return name.equals("Kit Shop") || name.equals("Class Selector");
     }
 
-    private Location loc() {
-        ConfigurationSection cfg = plugin.getConfig().getConfigurationSection("shop-villager");
+    private Location loc(String key) {
+        String section = key.equals("shop") ? "shop-villager" : "class-villager";
+        ConfigurationSection cfg = plugin.getConfig().getConfigurationSection(section);
         if (cfg == null) {
             return null;
         }

@@ -32,9 +32,12 @@ public class KitCommand implements CommandExecutor, Listener {
     private static final int GUI_SIZE = 54;
     private static final int MAX_KITS = 45;
 
+    public static KitCommand INSTANCE;
+
     private final KitPvPPlugin plugin;
 
     public KitCommand(KitPvPPlugin plugin) {
+        KitCommand.INSTANCE = this;
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
@@ -105,7 +108,7 @@ public class KitCommand implements CommandExecutor, Listener {
                 .replace("%time%", plugin.getKitCooldownManager().format(player.getUniqueId(), kit.getId())));
     }
 
-    private void openKitGui(Player player) {
+    public void openKitGui(Player player) {
         Inventory gui = Bukkit.createInventory(null, GUI_SIZE, GUI_TITLE);
         int index = 0;
         for (Kit kit : plugin.getKitManager().getKits()) {
