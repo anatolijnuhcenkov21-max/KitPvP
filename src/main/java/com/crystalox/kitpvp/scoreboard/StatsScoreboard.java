@@ -61,9 +61,9 @@ public class StatsScoreboard {
         UUID uuid = player.getUniqueId();
         StatsManager stats = plugin.getStatsManager();
         objective.getScore(Message.color(" ")).setScore(8);
-        objective.getScore(Message.color("&7Kills: &f" + stats.getKills(uuid))).setScore(7);
-        objective.getScore(Message.color("&7Deaths: &f" + stats.getDeaths(uuid))).setScore(6);
-        objective.getScore(Message.color("&7Killstreak: &f" + stats.getKillstreak(uuid))).setScore(5);
+        objective.getScore(Message.color("&7Убийства: &f" + stats.getKills(uuid))).setScore(7);
+        objective.getScore(Message.color("&7Смерти: &f" + stats.getDeaths(uuid))).setScore(6);
+        objective.getScore(Message.color("&7Серия убийств: &f" + stats.getKillstreak(uuid))).setScore(5);
         objective.getScore(Message.color(" ")).setScore(4);
     }
 
@@ -77,7 +77,7 @@ public class StatsScoreboard {
         if (name == null) {
             return;
         }
-        objective.getScore(Message.color("&7Top: &f" + name + " - " + entry.kills)).setScore(3);
+        objective.getScore(Message.color("&7Топ: &f" + name + " - " + entry.kills)).setScore(3);
     }
 
     private String title() {

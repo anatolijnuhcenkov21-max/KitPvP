@@ -6,7 +6,12 @@ import com.crystalox.kitpvp.util.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -38,9 +43,9 @@ public class ShopVillager implements Listener {
         }
         event.setCancelled(true);
         String name = ChatColor.stripColor(event.getRightClicked().getCustomName());
-        if ("Kit Shop".equals(name)) {
+        if ("Магазин".equals(name)) {
             ShopGui.open(event.getPlayer(), plugin);
-        } else if ("Class Selector".equals(name)) {
+        } else if ("Выбор класса".equals(name)) {
             if (KitCommand.INSTANCE != null) {
                 KitCommand.INSTANCE.openKitGui(event.getPlayer());
             }
@@ -87,6 +92,7 @@ public class ShopVillager implements Listener {
         }
         v.setRotation(-90f, 0f);
         configure(v, key);
+        placeSign(ground, key);
         npcs.put(key, v);
         plugin.getLogger().info("NPC " + key + " spawned at " + ground.getBlockX() + "," + ground.getBlockY() + "," + ground.getBlockZ());
     }
@@ -98,12 +104,26 @@ public class ShopVillager implements Listener {
         v.setCollidable(false);
         v.setGravity(false);
         v.setPersistent(true);
-        String name = key.equals("shop") ? "&6&lKit Shop" : "&a&lClass Selector";
+        String name = key.equals("shop") ? "&6&lМагазин" : "&a&lВыбор класса";
         v.setCustomName(Message.color(name));
         v.setCustomNameVisible(true);
         try {
             v.setProfession(Villager.Profession.LIBRARIAN);
         } catch (Exception ignored) {
+        }
+    }
+
+    private void placeSign(Location ground, String key) {
+        Block block = ground.getBlock().getRelative(BlockFace.DOWN);
+        if (block.getType() != Material.AIR) {
+            return;
+        }
+        block.setType(Material.OAK_SIGN);
+        BlockState state = block.getState();
+        if (state instanceof Sign) {
+            Sign sign = (Sign) state;
+            sign.setLine(0, key.equals("shop") ? "§6Магазин" : "§aВыбор класса");
+            sign.update();
         }
     }
 
@@ -124,7 +144,7 @@ public class ShopVillager implements Listener {
             return false;
         }
         String name = ChatColor.stripColor(entity.getCustomName());
-        return name.equals("Kit Shop") || name.equals("Class Selector");
+        return name.equals("Магазин") || name.equals("Выбор класса");
     }
 
     private Location loc(String key) {

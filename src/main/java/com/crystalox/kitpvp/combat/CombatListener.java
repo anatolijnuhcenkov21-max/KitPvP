@@ -59,7 +59,7 @@ public class CombatListener implements Listener {
         if (plugin.getConfig().getBoolean("enable-combo")) {
             int combo = comboTracker.getCombo(attacker.getUniqueId());
             if (combo >= 2) {
-                attacker.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(Message.color("&6Combo x" + combo)));
+                attacker.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(Message.color("&6Комбо x" + combo)));
             }
         }
         comboTracker.reset(damaged.getUniqueId());

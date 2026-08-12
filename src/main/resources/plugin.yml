@@ -6,25 +6,32 @@ softdepend: [EconomyPlus]
 
 commands:
   kit:
-    description: Give yourself a kit
-    usage: /kit [name]
+    description: Выдать себе кит
+    usage: /kit [название]
   kits:
-    description: List all available kits
+    description: Показать все доступные киты
     usage: /kits
   stats:
-    description: View player statistics
-    usage: /stats [player]
+    description: Посмотреть статистику игрока
+    usage: /stats [игрок]
+  top:
+    description: '&7Топ игроков по убийствам'
+    usage: /top
+    permission: crystalox.kitpvp.command.top
   kitpvp:
-    description: KitPvP admin commands
+    description: Админ-команды KitPvP
     usage: /kitpvp <pos1|pos2|savearena|setspawn|reload>
 
 permissions:
   crystalox.kitpvp.admin:
-    description: Access to KitPvP admin commands
+    description: Доступ к админ-командам KitPvP
     default: op
   crystalox.kitpvp.command.kit:
-    description: Allows using the kit command
+    description: Разрешает использовать команду kit
     default: true
   crystalox.kitpvp.command.stats:
-    description: Allows using the stats command
+    description: Разрешает использовать команду stats
+    default: true
+  crystalox.kitpvp.command.top:
+    description: Разрешает использовать команду top
     default: true

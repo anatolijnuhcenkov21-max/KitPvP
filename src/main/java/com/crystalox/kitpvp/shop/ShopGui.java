@@ -7,6 +7,8 @@ import com.crystalox.kitpvp.util.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,7 +28,7 @@ import java.util.UUID;
 
 public class ShopGui implements Listener {
 
-    private static final String SHOP_TITLE = "Kit Shop";
+    private static final String SHOP_TITLE = "Магазин";
 
     private final KitPvPPlugin plugin;
 
@@ -36,11 +38,11 @@ public class ShopGui implements Listener {
     }
 
     public static ItemStack diamondItem() {
-        return named(Material.DIAMOND, "&b&lKit Shop", "&7Right-click to open the shop");
+        return named(Material.DIAMOND, "&b&lМагазин", "&7ПКМ — открыть магазин");
     }
 
     public static ItemStack coinItem(int amount) {
-        return named(Material.GOLD_INGOT, "&6Coins: &f" + amount);
+        return named(Material.GOLD_INGOT, "&6Монеты: &f" + amount);
     }
 
     public static void open(Player player, KitPvPPlugin plugin) {
@@ -50,6 +52,7 @@ public class ShopGui implements Listener {
         }
         inv.setItem(4, infoBook());
         inv.setItem(13, crateButton(plugin));
+        inv.setItem(16, dailyButton(plugin));
         inv.setItem(22, coinItem(plugin.getStatsManager().getCoins(player.getUniqueId())));
         player.openInventory(inv);
     }
@@ -68,6 +71,8 @@ public class ShopGui implements Listener {
         }
         if (event.getSlot() == 13) {
             rollCrate((Player) event.getWhoClicked(), plugin);
+        } else if (event.getSlot() == 16) {
+            claimDaily((Player) event.getWhoClicked());
         }
     }
 
@@ -93,6 +98,7 @@ public class ShopGui implements Listener {
     }
 
     private void rollCrate(Player player, KitPvPPlugin plugin) {
+        player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1f, 1f);
         int cost = plugin.getConfig().getInt("crate-cost", 50);
         StatsManager stats = plugin.getStatsManager();
         UUID uuid = player.getUniqueId();
@@ -114,8 +120,10 @@ public class ShopGui implements Listener {
         int amount = ((Number) reward.get("amount")).intValue();
         if ("COINS".equals(type)) {
             plugin.getStatsManager().addCoins(player.getUniqueId(), amount);
+            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
         } else {
             giveItem(player, String.valueOf(reward.get("material")), amount);
+            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1f, 1f);
         }
         player.sendMessage(Message.of(msgs(), "crate-rolled").replace("%reward%", name));
     }
@@ -128,6 +136,8 @@ public class ShopGui implements Listener {
         }
         plugin.getKitStore().buy(player.getUniqueId(), kit.getId());
         player.sendMessage(Message.of(msgs(), "class-unlocked").replace("%kit%", kit.getDisplayName()));
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 2f);
+        player.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, player.getLocation().add(0, 1, 0), 20, 0.5, 0.5, 0.5, 0);
         player.closeInventory();
     }
 
@@ -138,7 +148,20 @@ public class ShopGui implements Listener {
                 break;
             }
         }
-        player.sendMessage(Message.color("&cAll classes unlocked!"));
+        player.sendMessage(Message.color("&cВсе классы открыты!"));
+        player.closeInventory();
+    }
+
+    private void claimDaily(Player player) {
+        UUID uuid = player.getUniqueId();
+        int amount = plugin.getConfig().getInt("daily-bonus", 25);
+        if (plugin.getKitStore().claimDaily(uuid)) {
+            plugin.getStatsManager().addCoins(uuid, amount);
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
+            player.sendMessage(Message.color("&aЕжедневный бонус: &6+" + amount + " &aмонет!"));
+        } else {
+            player.sendMessage(Message.color("&cБонус уже получен! Заходи завтра."));
+        }
         player.closeInventory();
     }
 
@@ -190,11 +213,17 @@ public class ShopGui implements Listener {
 
     private static ItemStack crateButton(KitPvPPlugin plugin) {
         int cost = plugin.getConfig().getInt("crate-cost", 50);
-        return named(Material.CHEST, "&dCrate",
-                "&7Cost: &e%cost% &7coins".replace("%cost%", String.valueOf(cost)),
-                "&7Rewards: coins, diamonds,",
-                "&7netherite, golden apples,",
-                "&7and CLASS UNLOCKS!");
+        return named(Material.CHEST, "&dКейс",
+                "&7Цена: &e%cost% &7монет".replace("%cost%", String.valueOf(cost)),
+                "&7Награды: монеты, алмазы,",
+                "&7незерит, золотые яблоки,",
+                "&7и ОТКРЫТИЕ КЛАССОВ!");
+    }
+
+    private static ItemStack dailyButton(KitPvPPlugin plugin) {
+        int amount = plugin.getConfig().getInt("daily-bonus", 25);
+        return named(Material.SUNFLOWER, "&aЕжедневный бонус",
+                "&7+%amount% монет раз в 24 часа".replace("%amount%", String.valueOf(amount)));
     }
 
     private static ItemStack filler() {

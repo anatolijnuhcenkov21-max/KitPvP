@@ -29,6 +29,7 @@ public class PlayerKitStore {
                 connection = DriverManager.getConnection("jdbc:sqlite:" + file.getAbsolutePath());
                 try (Statement statement = connection.createStatement()) {
                     statement.executeUpdate("CREATE TABLE IF NOT EXISTS owned(uuid TEXT, kit TEXT, PRIMARY KEY(uuid, kit))");
+                    statement.executeUpdate("CREATE TABLE IF NOT EXISTS bonus(uuid TEXT PRIMARY KEY, last BIGINT)");
                 }
             }
         } catch (Exception e) {
@@ -73,6 +74,32 @@ public class PlayerKitStore {
                 }
             }
         });
+    }
+
+    public boolean claimDaily(UUID uuid) {
+        try {
+            Connection conn = getConnection();
+            if (conn == null) {
+                return false;
+            }
+            long now = System.currentTimeMillis();
+            try (PreparedStatement select = conn.prepareStatement("SELECT last FROM bonus WHERE uuid = ?")) {
+                select.setString(1, uuid.toString());
+                try (ResultSet result = select.executeQuery()) {
+                    if (result.next() && now - result.getLong("last") < 86400000L) {
+                        return false;
+                    }
+                }
+            }
+            try (PreparedStatement insert = conn.prepareStatement("INSERT OR REPLACE INTO bonus(uuid,last) VALUES(?,?)")) {
+                insert.setString(1, uuid.toString());
+                insert.setLong(2, now);
+                insert.executeUpdate();
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void close() {

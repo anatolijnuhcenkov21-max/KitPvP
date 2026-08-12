@@ -11,6 +11,8 @@ import com.crystalox.kitpvp.util.TabUpdater;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -42,11 +44,13 @@ public class DeathListener implements Listener {
             return;
         }
         plugin.getStatsManager().addKill(killer.getUniqueId());
+        checkKillstreakBonus(killer);
+        checkKillstreakReward(killer);
         if (hasBow(killer)) {
             killer.getInventory().addItem(new ItemStack(Material.ARROW, plugin.getConfig().getInt("arrows-per-kill", 8)));
         }
         rewardKiller(killer);
-        checkKillstreakReward(killer);
+        deathEffects(victim, killer);
         plugin.getStatsManager().addDeath(victim.getUniqueId());
         TabUpdater.update(victim, plugin);
         event.setDeathMessage(killMessage(victim, killer));
@@ -75,8 +79,26 @@ public class DeathListener implements Listener {
     private void rewardKiller(Player killer) {
         int coins = plugin.getConfig().getInt("coins-per-kill", 5);
         plugin.getStatsManager().addCoins(killer.getUniqueId(), coins);
-        killer.sendMessage(Message.color(plugin.getConfig().getString("messages.coins-earned", "&6+%amount% coins").replace("%amount%", String.valueOf(coins))));
+        killer.sendMessage(Message.color(plugin.getConfig().getString("messages.coins-earned", "&6+%amount% монет").replace("%amount%", String.valueOf(coins))));
         TabUpdater.update(killer, plugin);
+    }
+
+    private void checkKillstreakBonus(Player killer) {
+        int ks = plugin.getStatsManager().getKillstreak(killer.getUniqueId());
+        ConfigurationSection bonus = plugin.getConfig().getConfigurationSection("killstreak-bonus");
+        if (bonus == null || !bonus.contains(String.valueOf(ks))) {
+            return;
+        }
+        int coins = bonus.getInt(String.valueOf(ks));
+        plugin.getStatsManager().addCoins(killer.getUniqueId(), coins);
+        plugin.getServer().broadcastMessage(Message.color("&6%player% &7получает награду за серию &e" + ks + "&7: &6+" + coins + " монет").replace("%player%", killer.getName()));
+    }
+
+    private void deathEffects(Player victim, Player killer) {
+        Location loc = victim.getLocation();
+        victim.getWorld().playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 1f, 0.5f);
+        victim.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, loc.add(0, 1, 0), 1, 0.2, 0.2, 0.2, 0);
+        killer.playSound(killer.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1.5f);
     }
 
     private void checkKillstreakReward(Player killer) {

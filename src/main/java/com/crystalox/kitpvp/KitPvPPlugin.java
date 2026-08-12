@@ -5,6 +5,7 @@ import com.crystalox.kitpvp.combat.CombatListener;
 import com.crystalox.kitpvp.commands.ArenaCommand;
 import com.crystalox.kitpvp.commands.KitCommand;
 import com.crystalox.kitpvp.commands.StatsCommand;
+import com.crystalox.kitpvp.commands.TopCommand;
 import com.crystalox.kitpvp.kit.KitCooldownManager;
 import com.crystalox.kitpvp.kit.KitManager;
 import com.crystalox.kitpvp.listener.ArenaProtectionListener;
@@ -12,6 +13,7 @@ import com.crystalox.kitpvp.listener.DeathListener;
 import com.crystalox.kitpvp.listener.DropProtectionListener;
 import com.crystalox.kitpvp.listener.JoinQuitListener;
 import com.crystalox.kitpvp.listener.SpawnDropListener;
+import com.crystalox.kitpvp.listener.StatSign;
 import com.crystalox.kitpvp.scoreboard.StatsScoreboard;
 import com.crystalox.kitpvp.shop.PlayerKitStore;
 import com.crystalox.kitpvp.shop.ShopVillager;
@@ -56,7 +58,9 @@ public class KitPvPPlugin extends JavaPlugin {
         getCommand("kit").setExecutor(new KitCommand(this));
         getCommand("kits").setExecutor(new KitCommand(this));
         getCommand("stats").setExecutor(new StatsCommand(this));
+        getCommand("top").setExecutor(new TopCommand(this));
         getCommand("kitpvp").setExecutor(new ArenaCommand(this));
+        new StatSign(this);
         new StatsScoreboard(this).start();
         getLogger().info("KitPvP v" + getDescription().getVersion() + " enabled");
     }

@@ -13,12 +13,12 @@ public final class Format {
         long minutes = ms / 60000;
         long seconds = (ms % 60000) / 1000;
         if (minutes > 0 && seconds > 0) {
-            return minutes + "m " + seconds + "s";
+            return minutes + "м " + seconds + "с";
         }
         if (minutes > 0) {
-            return minutes + "m";
+            return minutes + "м";
         }
-        return seconds + "s";
+        return seconds + "с";
     }
 
     public static String number(double v) {

@@ -27,7 +27,7 @@ public class StatsCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0 && !(sender instanceof Player)) {
-            sender.sendMessage(Message.color("&cOnly players can use this command."));
+            sender.sendMessage(Message.color("&cТолько игроки могут использовать эту команду."));
             return true;
         }
         Player target = args.length == 0 ? (Player) sender : Bukkit.getPlayerExact(args[0]);

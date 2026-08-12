@@ -25,7 +25,7 @@ import java.util.List;
 
 public class KitCommand implements CommandExecutor, Listener {
 
-    private static final String GUI_TITLE = "Kits";
+    private static final String GUI_TITLE = "Выбор класса";
     private static final int GUI_SIZE = 54;
     private static final int MAX_KITS = 45;
 
@@ -42,7 +42,7 @@ public class KitCommand implements CommandExecutor, Listener {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(Message.color("&cOnly players can use this command."));
+            sender.sendMessage(Message.color("&cТолько игроки могут использовать эту команду."));
             return true;
         }
         Player player = (Player) sender;
@@ -108,8 +108,8 @@ public class KitCommand implements CommandExecutor, Listener {
             lore.add(Message.color(line));
         }
         if (isLocked(player, kit)) {
-            lore.add(Message.color("&cLocked"));
-            lore.add(Message.color("&7Unlock in Kit Shop crates"));
+            lore.add(Message.color("&cЗаблокирован"));
+            lore.add(Message.color("&7Открой в кейсах"));
         } else {
             lore.add(Message.color(stateLine(player, kit)));
         }
@@ -124,12 +124,12 @@ public class KitCommand implements CommandExecutor, Listener {
 
     private String stateLine(Player player, Kit kit) {
         if (plugin.getKitStore().owns(player.getUniqueId(), kit.getId())) {
-            return "&aOwned";
+            return "&aОткрыт";
         }
         if (kit.getPrice() > 0) {
-            return "&cLocked";
+            return "&cЗаблокирован";
         }
-        return "&aFree";
+        return "&aБесплатный";
     }
 
     @EventHandler
@@ -171,9 +171,9 @@ public class KitCommand implements CommandExecutor, Listener {
     public static ItemStack selectorItem() {
         ItemStack item = new ItemStack(Material.WOODEN_SWORD);
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(Message.color("&6&lClass Selector"));
+        meta.setDisplayName(Message.color("&6&lВыбор класса"));
         List<String> lore = new ArrayList<String>();
-        lore.add(Message.color("&7Right-click to choose your class"));
+        lore.add(Message.color("&7ПКМ — выбрать класс"));
         meta.setLore(lore);
         meta.setUnbreakable(true);
         item.setItemMeta(meta);
@@ -201,6 +201,6 @@ public class KitCommand implements CommandExecutor, Listener {
         if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) {
             return false;
         }
-        return ChatColor.stripColor(item.getItemMeta().getDisplayName()).equals("Class Selector");
+        return ChatColor.stripColor(item.getItemMeta().getDisplayName()).equals("Выбор класса");
     }
 }

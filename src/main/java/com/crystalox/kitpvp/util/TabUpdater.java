@@ -9,7 +9,7 @@ public final class TabUpdater {
     }
 
     public static void update(Player p, KitPvPPlugin plugin) {
-        String fmt = plugin.getConfig().getString("tab-format", "&7%player% &8[&7KS:&f%streak%&8]");
+        String fmt = plugin.getConfig().getString("tab-format", "&7%player% &8[&7Серия:&f%streak%&8]");
         if (fmt == null || fmt.isEmpty()) {
             p.setPlayerListName(null);
             return;

@@ -26,14 +26,24 @@ enable-combo: true
 combo-window-ms: 3000
 
 killstreak-rewards:
-  3: '&e%player% &7is on a 3 killstreak!'
+  3: '&e%player% &7на серии из 3 убийств!'
   5: 'cmd:give %player% diamond 1'
-  10: '&6%player% &eis unstoppable!'
+  10: '&6%player% &eнеудержим!'
 
 scoreboard-title: '&6&lKITPVP'
 
-tab-format: '&7%player% &8[&7KS:&f%streak%&8]'
+tab-format: '&7%player% &8[&7Серия:&f%streak%&8]'
 coins-per-kill: 5
+killstreak-bonus:
+  5: 10
+  10: 25
+  15: 50
+daily-bonus: 25
+stat-sign:
+  world: MHkitpvp
+  x: -5.5
+  y: 155
+  z: -25.5
 shop-villager:
   world: MHkitpvp
   x: -7.5
@@ -51,48 +61,48 @@ crate-rewards:
   - type: COINS
     amount: 150
     weight: 15
-    name: '&6Coins x150'
+    name: '&6Монеты x150'
   - type: COINS
     amount: 25
     weight: 30
-    name: '&6Coins x25'
+    name: '&6Монеты x25'
   - type: ITEM
     material: DIAMOND
     amount: 1
     weight: 12
-    name: '&bDiamond'
+    name: '&bАлмаз'
   - type: ITEM
     material: NETHERITE_INGOT
     amount: 1
     weight: 3
-    name: '&cNetherite Ingot'
+    name: '&cНезеритовый слиток'
   - type: CLASS
     weight: 12
-    name: '&dRandom Class Unlock'
+    name: '&dОткрытие случайного класса'
   - type: ITEM
     material: GOLDEN_APPLE
     amount: 2
     weight: 20
-    name: '&6Golden Apples x2'
+    name: '&6Золотые яблоки x2'
   - type: ITEM
     material: ENDER_PEARL
     amount: 2
     weight: 20
-    name: '&dEnder Pearls x2'
+    name: '&dЭндер-жемчуги x2'
 
 kits:
   peasant:
-    display-name: '&7Peasant'
+    display-name: '&7Крестьянин'
     icon: WOODEN_SWORD
     description:
-      - '&7Simple villager with a'
-      - '&7wooden blade'
+      - '&7Простой житель с деревянным'
+      - '&7мечом'
     cooldown-seconds: 15
     permission: 'none'
     price: 0
     items:
       - material: WOODEN_SWORD
-        name: '&7Wooden Blade'
+        name: '&7Деревянный клинок'
       - material: APPLE
         amount: 1
     armor:
@@ -102,17 +112,17 @@ kits:
       boots: {material: LEATHER_BOOTS}
     effects: []
   scout:
-    display-name: '&aScout'
+    display-name: '&aРазведчик'
     icon: STONE_AXE
     description:
-      - '&7Fast skirmisher with'
-      - '&7a stone axe'
+      - '&7Быстрый боец с каменным'
+      - '&7топором'
     cooldown-seconds: 15
     permission: 'none'
     price: 0
     items:
       - material: STONE_AXE
-        name: '&aScout Axe'
+        name: '&aТопор разведчика'
       - material: APPLE
         amount: 2
     armor:
@@ -123,19 +133,19 @@ kits:
     effects:
       - SPEED:300:0
   fisher:
-    display-name: '&bFisher'
+    display-name: '&bРыбак'
     icon: FISHING_ROD
     description:
-      - '&7Hooks enemies from'
-      - '&7a distance'
+      - '&7Цепляет врагов удочкой'
+      - '&7издалека'
     cooldown-seconds: 15
     permission: 'none'
     price: 0
     items:
       - material: FISHING_ROD
-        name: '&bMagic Rod'
+        name: '&bВолшебная удочка'
       - material: STONE_SWORD
-        name: '&7Bone Dagger'
+        name: '&7Костяной кинжал'
       - material: COOKED_COD
         amount: 3
     armor:
@@ -145,17 +155,17 @@ kits:
       boots: {material: LEATHER_BOOTS}
     effects: []
   thief:
-    display-name: '&8Thief'
+    display-name: '&8Вор'
     icon: STONE_SWORD
     description:
-      - '&7Sneaky backstabber,'
-      - '&7extra jump'
+      - '&7Скрытный удар, двойной'
+      - '&7прыжок'
     cooldown-seconds: 15
     permission: 'none'
     price: 0
     items:
       - material: STONE_SWORD
-        name: '&8Thief Dagger'
+        name: '&8Кинжал вора'
       - material: GOLDEN_APPLE
         amount: 1
     armor:
@@ -167,17 +177,17 @@ kits:
       - SPEED:600:1
       - JUMP:300:1
   miner:
-    display-name: '&6Miner'
+    display-name: '&6Шахтёр'
     icon: STONE_PICKAXE
     description:
-      - '&7Heavy pickaxe hits,'
-      - '&7hard to stop'
+      - '&7Тяжёлая кирка, трудно'
+      - '&7остановить'
     cooldown-seconds: 15
     permission: 'none'
     price: 0
     items:
       - material: STONE_PICKAXE
-        name: '&6Miner Pick'
+        name: '&6Кирка шахтёра'
         enchants:
           SHARPNESS: 1
       - material: BREAD
@@ -190,21 +200,21 @@ kits:
     effects:
       - DAMAGE_RESISTANCE:300:0
   knight:
-    display-name: '&7Knight'
+    display-name: '&7Рыцарь'
     icon: SHIELD
     description:
-      - '&7Sword and shield,'
-      - '&7solid chain armor'
+      - '&7Меч и щит, кольчужная'
+      - '&7броня'
     cooldown-seconds: 20
     permission: 'none'
     price: 40
     items:
       - material: STONE_SWORD
-        name: '&7Knight Sword'
+        name: '&7Меч рыцаря'
         enchants:
           SHARPNESS: 1
       - material: SHIELD
-        name: '&7Knight Shield'
+        name: '&7Щит рыцаря'
       - material: GOLDEN_APPLE
         amount: 1
     armor:
@@ -214,17 +224,16 @@ kits:
       boots: {material: CHAINMAIL_BOOTS}
     effects: []
   ranger:
-    display-name: '&aRanger'
+    display-name: '&aРейнджер'
     icon: BOW
     description:
-      - '&7Bow expert with'
-      - '&7chain armor'
+      - '&7Мастер лука в кольчуге'
     cooldown-seconds: 20
     permission: 'none'
     price: 40
     items:
       - material: BOW
-        name: '&aRanger Bow'
+        name: '&aЛук рейнджера'
         enchants:
           POWER: 2
       - material: ARROW
@@ -239,23 +248,22 @@ kits:
     effects:
       - SPEED:300:0
   hunter:
-    display-name: '&2Hunter'
+    display-name: '&2Охотник'
     icon: CROSSBOW
     description:
-      - '&7Balanced: sword and'
-      - '&7a crossbow'
+      - '&7Баланс: меч и арбалет'
     cooldown-seconds: 20
     permission: 'none'
     price: 40
     items:
       - material: CROSSBOW
-        name: '&2Hunter Crossbow'
+        name: '&2Арбалет охотника'
         enchants:
           QUICK_CHARGE: 2
       - material: ARROW
         amount: 12
       - material: STONE_SWORD
-        name: '&2Hunter Blade'
+        name: '&2Клинок охотника'
     armor:
       helmet: {material: LEATHER_HELMET}
       chestplate: {material: CHAINMAIL_CHESTPLATE}
@@ -263,17 +271,17 @@ kits:
       boots: {material: LEATHER_BOOTS}
     effects: []
   pyromancer:
-    display-name: '&cPyromancer'
+    display-name: '&cПиромант'
     icon: FLINT_AND_STEEL
     description:
-      - '&7Fire sword, burns'
-      - '&7enemies'
+      - '&7Огненный меч, поджигает'
+      - '&7врагов'
     cooldown-seconds: 20
     permission: 'none'
     price: 60
     items:
       - material: STONE_SWORD
-        name: '&cFire Blade'
+        name: '&cОгненный клинок'
         enchants:
           FIRE_ASPECT: 1
       - material: GOLDEN_APPLE
@@ -286,22 +294,22 @@ kits:
     effects:
       - FIRE_RESISTANCE:300:0
   frost_mage:
-    display-name: '&bFrost Mage'
+    display-name: '&bЛедяной маг'
     icon: SNOWBALL
     description:
-      - '&7Slows enemies with'
-      - '&7ice splashes'
+      - '&7Замедляет врагов ледяными'
+      - '&7сплэшами'
     cooldown-seconds: 20
     permission: 'none'
     price: 60
     items:
       - material: STONE_SWORD
-        name: '&bFrost Blade'
+        name: '&bЛедяной клинок'
         enchants:
           SHARPNESS: 1
       - material: SPLASH_POTION
         amount: 3
-        name: '&bSlow Splash'
+        name: '&bЗамедляющий сплэш'
         potion-effects:
           - SLOW:300:1
     armor:
@@ -311,25 +319,24 @@ kits:
       boots: {material: GOLDEN_BOOTS}
     effects: []
   alchemist:
-    display-name: '&2Alchemist'
+    display-name: '&2Алхимик'
     icon: BREWING_STAND
     description:
-      - '&7Poison and harming'
-      - '&7splashes'
+      - '&7Сплэши яда и урона'
     cooldown-seconds: 20
     permission: 'none'
     price: 60
     items:
       - material: STONE_SWORD
-        name: '&2Alchemist Blade'
+        name: '&2Клинок алхимика'
       - material: SPLASH_POTION
         amount: 2
-        name: '&2Poison Splash'
+        name: '&2Сплэш яда'
         potion-effects:
           - POISON:120:1
       - material: SPLASH_POTION
         amount: 1
-        name: '&cHarming Splash'
+        name: '&cСплэш урона'
         potion-effects:
           - INSTANT_DAMAGE:1:1
     armor:
@@ -339,17 +346,17 @@ kits:
       boots: {material: GOLDEN_BOOTS}
     effects: []
   berserker:
-    display-name: '&cBerserker'
+    display-name: '&cБерсерк'
     icon: GOLDEN_AXE
     description:
-      - '&7Rage: golden axe and'
-      - '&7strength'
+      - '&7Ярость: золотой топор'
+      - '&7и сила'
     cooldown-seconds: 25
     permission: 'none'
     price: 80
     items:
       - material: GOLDEN_AXE
-        name: '&cBerserker Axe'
+        name: '&cТопор берсерка'
         enchants:
           SHARPNESS: 2
       - material: GOLDEN_APPLE
@@ -362,17 +369,17 @@ kits:
     effects:
       - INCREASE_DAMAGE:300:0
   ninja:
-    display-name: '&8Ninja'
+    display-name: '&8Ниндзя'
     icon: ENDER_PEARL
     description:
-      - '&7Teleports and strikes'
-      - '&7from the shadows'
+      - '&7Телепорты и удары из'
+      - '&7теней'
     cooldown-seconds: 25
     permission: 'none'
     price: 80
     items:
       - material: STONE_SWORD
-        name: '&8Ninja Katana'
+        name: '&8Катана ниндзя'
         enchants:
           SHARPNESS: 2
       - material: ENDER_PEARL
@@ -385,20 +392,19 @@ kits:
     effects:
       - SPEED:600:2
   medic:
-    display-name: '&aMedic'
+    display-name: '&aМедик'
     icon: GOLDEN_APPLE
     description:
-      - '&7Heals allies, hard'
-      - '&7to take down'
+      - '&7Лечит союзников, живучий'
     cooldown-seconds: 20
     permission: 'none'
     price: 50
     items:
       - material: STONE_SWORD
-        name: '&aMedic Blade'
+        name: '&aКлинок медика'
       - material: SPLASH_POTION
         amount: 3
-        name: '&aHealing Splash'
+        name: '&aЛечащий сплэш'
         potion-effects:
           - INSTANT_HEALTH:1:1
     armor:
@@ -408,17 +414,17 @@ kits:
       boots: {material: CHAINMAIL_BOOTS}
     effects: []
   samurai:
-    display-name: '&eSamurai'
+    display-name: '&eСамурай'
     icon: STONE_SWORD
     description:
-      - '&7Honor-bound duelist'
-      - '&7with sharp steel'
+      - '&7Дуэлянт с острым'
+      - '&7клинком'
     cooldown-seconds: 25
     permission: 'none'
     price: 80
     items:
       - material: STONE_SWORD
-        name: '&eSamurai Katana'
+        name: '&eКатана самурая'
         enchants:
           SHARPNESS: 2
       - material: GOLDEN_APPLE
@@ -431,17 +437,17 @@ kits:
     effects:
       - SPEED:300:0
   warrior:
-    display-name: '&cWarrior'
+    display-name: '&cВоин'
     icon: IRON_SWORD
     description:
-      - '&7Top melee: iron armor,'
-      - '&7sharp blade'
+      - '&7Топ ближнего боя: железная'
+      - '&7броня и клинок'
     cooldown-seconds: 30
     permission: 'none'
     price: 100
     items:
       - material: IRON_SWORD
-        name: '&cWarrior Blade'
+        name: '&cКлинок воина'
         enchants:
           SHARPNESS: 2
       - material: GOLDEN_APPLE
@@ -454,21 +460,21 @@ kits:
     effects:
       - SPEED:600:0
   paladin:
-    display-name: '&fPaladin'
+    display-name: '&fПаладин'
     icon: SHIELD
     description:
-      - '&7Holy knight with iron'
-      - '&7chestplate and shield'
+      - '&7Святой рыцарь: железный'
+      - '&7нагрудник и щит'
     cooldown-seconds: 30
     permission: 'none'
     price: 100
     items:
       - material: IRON_SWORD
-        name: '&fPaladin Sword'
+        name: '&fМеч паладина'
         enchants:
           SHARPNESS: 1
       - material: SHIELD
-        name: '&fHoly Shield'
+        name: '&fСвятой щит'
       - material: GOLDEN_APPLE
         amount: 2
     armor:
@@ -479,17 +485,17 @@ kits:
     effects:
       - ABSORPTION:600:0
   assassin:
-    display-name: '&8Assassin'
+    display-name: '&8Ассасин'
     icon: IRON_SWORD
     description:
-      - '&7Deadly speed, ender'
-      - '&7pearls, iron blade'
+      - '&7Смертельная скорость,'
+      - '&7эндер-жемчуг'
     cooldown-seconds: 30
     permission: 'none'
     price: 120
     items:
       - material: IRON_SWORD
-        name: '&8Assassin Blade'
+        name: '&8Клинок ассасина'
         enchants:
           SHARPNESS: 1
       - material: ENDER_PEARL
@@ -503,17 +509,16 @@ kits:
       - SPEED:600:2
       - JUMP:300:2
   sniper:
-    display-name: '&fSniper'
+    display-name: '&fСнайпер'
     icon: BOW
     description:
-      - '&7Devastating longbow'
-      - '&7with power IV'
+      - '&7Мощный лук Сила IV'
     cooldown-seconds: 30
     permission: 'none'
     price: 150
     items:
       - material: BOW
-        name: '&fSniper Longbow'
+        name: '&fДлинный лук снайпера'
         enchants:
           POWER: 4
       - material: ARROW
@@ -526,22 +531,22 @@ kits:
     effects:
       - SPEED:300:0
   warlock:
-    display-name: '&5Warlock'
+    display-name: '&5Чёрный маг'
     icon: WITHER_SKELETON_SKULL
     description:
-      - '&7Wither splashes and'
-      - '&7dark magic'
+      - '&7Сплэши иссушения,'
+      - '&7тёмная магия'
     cooldown-seconds: 30
     permission: 'none'
     price: 130
     items:
       - material: STONE_SWORD
-        name: '&5Dark Blade'
+        name: '&5Тёмный клинок'
         enchants:
           SHARPNESS: 1
       - material: SPLASH_POTION
         amount: 2
-        name: '&5Wither Splash'
+        name: '&5Сплэш иссушения'
         potion-effects:
           - WITHER:200:1
     armor:
@@ -552,17 +557,17 @@ kits:
     effects:
       - SPEED:300:0
   tank:
-    display-name: '&7Tank'
+    display-name: '&7Танк'
     icon: IRON_CHESTPLATE
     description:
-      - '&7Iron chestplate, absorbs'
-      - '&7massive damage'
+      - '&7Железный нагрудник,'
+      - '&7поглощает урон'
     cooldown-seconds: 30
     permission: 'none'
     price: 120
     items:
       - material: STONE_SWORD
-        name: '&7Tank Hammer'
+        name: '&7Молот танка'
         enchants:
           SHARPNESS: 1
       - material: GOLDEN_APPLE
@@ -576,17 +581,17 @@ kits:
       - SLOW:600:0
       - ABSORPTION:600:0
   gladiator:
-    display-name: '&eGladiator'
+    display-name: '&eГладиатор'
     icon: GOLDEN_SWORD
     description:
-      - '&7Golden blade, strength'
-      - '&7of the arena'
+      - '&7Золотой клинок, сила'
+      - '&7арены'
     cooldown-seconds: 30
     permission: 'none'
     price: 110
     items:
       - material: GOLDEN_SWORD
-        name: '&eGladiator Sword'
+        name: '&eМеч гладиатора'
         enchants:
           SHARPNESS: 2
       - material: GOLDEN_APPLE
@@ -600,17 +605,17 @@ kits:
       - INCREASE_DAMAGE:300:0
       - SPEED:300:0
   ghost:
-    display-name: '&bGhost'
+    display-name: '&bПризрак'
     icon: GLASS
     description:
-      - '&7Vanishes and strikes'
-      - '&7from nowhere'
+      - '&7Исчезает и бьёт'
+      - '&7из ниоткуда'
     cooldown-seconds: 30
     permission: 'none'
     price: 150
     items:
       - material: STONE_SWORD
-        name: '&bGhost Blade'
+        name: '&bКлинок призрака'
         enchants:
           SHARPNESS: 1
       - material: GOLDEN_APPLE
@@ -625,37 +630,37 @@ kits:
       - SPEED:600:1
 
 messages:
-  join-spawn-teleport: '&7You have been teleported to the arena spawn!'
-  default-kit-given: '&7You received the default kit &e%kit%&7!'
-  kit-not-found: '&cKit &e%kit% &cnot found!'
-  kit-cooldown: '&cKit &e%kit% &cis still on cooldown!'
-  kit-no-permission: '&cYou do not have permission to use kit &e%kit%&c!'
-  kit-bought: '&aYou bought kit &e%kit% &afor &6$%price%&a!'
-  kit-cannot-afford: '&cYou cannot afford kit &e%kit%&c!'
-  kit-given: '&aKit &e%kit% &awas given to &e%player%&a!'
-  stats-title: '&6&lStats of &e%player%'
-  stats-kills: '&7Kills: &e%kills%'
-  stats-deaths: '&7Deaths: &e%deaths%'
+  join-spawn-teleport: '&7Ты телепортирован на спавн арены!'
+  default-kit-given: '&7Ты получил стандартный кит &e%kit%&7!'
+  kit-not-found: '&cКит &e%kit% &cне найден!'
+  kit-cooldown: '&cКит &e%kit% &cещё на перезарядке!'
+  kit-no-permission: '&cУ тебя нет прав на использование кита &e%kit%&c!'
+  kit-bought: '&aТы купил кит &e%kit% &aза &6$%price%&a!'
+  kit-cannot-afford: '&cТебе не хватает монет на кит &e%kit%&c!'
+  kit-given: '&aКит &e%kit% &aвыдан игроку &e%player%&a!'
+  stats-title: '&6&lСтатистика игрока &e%player%'
+  stats-kills: '&7Убийства: &e%kills%'
+  stats-deaths: '&7Смерти: &e%deaths%'
   stats-kdr: '&7KDR: &e%kdr%'
-  stats-killstreak: '&7Best killstreak: &e%killstreak%'
-  stats-top-header: '&6&lTop Players'
-  stats-top-entry: '&7%position%. &e%player% &7- &e%kills% &7kills'
-  arena-pos1-set: '&aPosition 1 set!'
-  arena-pos2-set: '&aPosition 2 set!'
-  arena-saved: '&aArena saved successfully!'
-  arena-not-set: '&cArena has not been set yet!'
-  spawn-set: '&aSpawn location set!'
-  reload-success: '&aConfig reloaded successfully!'
-  no-permission: '&cYou do not have permission to do that!'
-  unknown-command: '&cUnknown command!'
-  death-format: '&7%victim% &8was killed by &7%killer%'
-  death-format-nokiller: '&7%victim% &8died'
-  class-selected: '&aClass &e%kit% &aselected! Jump off the spawn to receive it.'
-  class-bought: '&aYou bought class &e%kit% &afor &6%cost% coins&a!'
-  class-locked: '&cThis class is locked! Unlock it in Kit Shop crates.'
-  class-unlocked: '&aYou unlocked class &e%kit%&a!'
-  kit-already-owned: '&e%kit% &cis already owned.'
-  coins-not-enough: '&cYou need &6%cost% coins&c. You have &6%coins%&c.'
-  coins-earned: '&6+%amount% coins'
-  crate-no-funds: '&cNot enough coins! Crate costs &6%cost%&c.'
-  crate-rolled: '&aYou rolled: &e%reward%&a!'
+  stats-killstreak: '&7Лучшая серия убийств: &e%killstreak%'
+  stats-top-header: '&6&lТоп игроков'
+  stats-top-entry: '&7%position%. &e%player% &7- &e%kills% &7убийств'
+  arena-pos1-set: '&aПозиция 1 установлена!'
+  arena-pos2-set: '&aПозиция 2 установлена!'
+  arena-saved: '&aАрена успешно сохранена!'
+  arena-not-set: '&cАрена ещё не установлена!'
+  spawn-set: '&aТочка спавна установлена!'
+  reload-success: '&aКонфигурация успешно перезагружена!'
+  no-permission: '&cНедостаточно прав.'
+  unknown-command: '&cНеизвестная команда!'
+  death-format: '&7%victim% &8был убит игроком &7%killer%'
+  death-format-nokiller: '&7%victim% &8умер'
+  class-selected: '&aКласс &e%kit% &aвыбран! Прыгни со спавна, чтобы получить его.'
+  class-bought: '&aТы купил класс &e%kit% &aза &6%cost% монет&a!'
+  class-locked: '&cЭтот класс заблокирован! Открой его в кейсах магазина.'
+  class-unlocked: '&aТы открыл класс &e%kit%&a!'
+  kit-already-owned: '&e%kit% &cуже открыт.'
+  coins-not-enough: '&cТебе нужно &6%cost% монет&c. У тебя &6%coins%&c.'
+  coins-earned: '&6+%amount% монет'
+  crate-no-funds: '&cНедостаточно монет! Кейс стоит &6%cost%&c.'
+  crate-rolled: '&aТебе выпало: &e%reward%&a!'
