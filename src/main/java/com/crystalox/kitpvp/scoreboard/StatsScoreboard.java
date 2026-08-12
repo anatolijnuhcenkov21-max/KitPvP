@@ -11,6 +11,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,6 +46,9 @@ public class StatsScoreboard {
 
     private void refresh(Player player) {
         Scoreboard scoreboard = player.getScoreboard();
+        for (String entry : new ArrayList<>(scoreboard.getEntries())) {
+            scoreboard.resetScores(entry);
+        }
         Objective objective = scoreboard.getObjective("stats");
         if (objective == null) {
             scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();

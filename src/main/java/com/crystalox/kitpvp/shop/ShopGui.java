@@ -22,7 +22,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
@@ -107,27 +106,9 @@ public class ShopGui implements Listener {
             return;
         }
         plugin.getKitStore().incCrateCount(uuid);
-        grantReward(player, plugin, pickReward(plugin.getConfig().getMapList("crate-rewards")));
-        plugin.getQuestManager().onCrate(player.getUniqueId());
+        grantClass(player, plugin);
+        plugin.getQuestManager().onCrate(uuid);
         player.closeInventory();
-    }
-
-    private void grantReward(Player player, KitPvPPlugin plugin, Map<?, ?> reward) {
-        String type = String.valueOf(reward.get("type")).toUpperCase();
-        String name = String.valueOf(reward.get("name"));
-        if ("CLASS".equals(type)) {
-            grantClass(player, plugin);
-            return;
-        }
-        int amount = ((Number) reward.get("amount")).intValue();
-        if ("COINS".equals(type)) {
-            plugin.getStatsManager().addCoins(player.getUniqueId(), amount);
-            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
-        } else {
-            giveItem(player, String.valueOf(reward.get("material")), amount);
-            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 1f, 1f);
-        }
-        player.sendMessage(Message.of(msgs(), "crate-rolled").replace("%reward%", name));
     }
 
     private void grantClass(Player player, KitPvPPlugin plugin) {
@@ -144,13 +125,10 @@ public class ShopGui implements Listener {
     }
 
     private void fallbackCoins(Player player, KitPvPPlugin plugin) {
-        for (Map<?, ?> reward : plugin.getConfig().getMapList("crate-rewards")) {
-            if ("COINS".equals(String.valueOf(reward.get("type")).toUpperCase())) {
-                plugin.getStatsManager().addCoins(player.getUniqueId(), ((Number) reward.get("amount")).intValue());
-                break;
-            }
-        }
-        player.sendMessage(Message.color("&cВсе классы открыты!"));
+        int fallback = plugin.getConfig().getInt("crate-all-owned-coins", 100);
+        plugin.getStatsManager().addCoins(player.getUniqueId(), fallback);
+        player.sendMessage(Message.color("&eВсе классы открыты! &6+" + fallback + " &eмонет"));
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f);
         player.closeInventory();
     }
 
@@ -180,41 +158,6 @@ public class ShopGui implements Listener {
         return locked.get(new Random().nextInt(locked.size()));
     }
 
-    private void giveItem(Player player, String name, int amount) {
-        Material material = Material.getMaterial(name.toUpperCase());
-        if (material == null) {
-            return;
-        }
-        ItemStack item = new ItemStack(material, amount);
-        Map<Integer, ItemStack> leftover = player.getInventory().addItem(item);
-        for (ItemStack drop : leftover.values()) {
-            player.getWorld().dropItemNaturally(player.getLocation(), drop);
-        }
-    }
-
-    private Map<?, ?> pickReward(List<Map<?, ?>> rewards) {
-        int total = 0;
-        for (Map<?, ?> reward : rewards) {
-            total += weightOf(reward);
-        }
-        int roll = new Random().nextInt(Math.max(total, 1));
-        for (Map<?, ?> reward : rewards) {
-            roll -= weightOf(reward);
-            if (roll < 0) {
-                return reward;
-            }
-        }
-        return rewards.get(rewards.size() - 1);
-    }
-
-    private int weightOf(Map<?, ?> reward) {
-        try {
-            return ((Number) reward.get("weight")).intValue();
-        } catch (RuntimeException e) {
-            return 1;
-        }
-    }
-
     private static ItemStack infoBook() {
         return named(Material.BOOK, "&fКак открывать классы",
                 "&7Классы выпадают из кейсов!",
@@ -225,8 +168,8 @@ public class ShopGui implements Listener {
         int cost = crateCost(player, plugin);
         return named(Material.CHEST, "&dКейс",
                 "&7Цена: &e%cost% &7монет (+10 за каждый кейс)".replace("%cost%", String.valueOf(cost)),
-                "&7Награды: монеты, предметы",
-                "&7и ОТКРЫТИЕ КЛАССОВ!");
+                "&7В кейсе: открытие нового",
+                "&7класса (без повторов)");
     }
 
     private static int crateCost(Player player, KitPvPPlugin plugin) {

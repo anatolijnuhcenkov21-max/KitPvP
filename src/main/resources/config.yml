@@ -65,38 +65,11 @@ quest-villager:
 arrows-per-kill: 8
 kit-give-height: 120
 crate-cost: 50
+crate-all-owned-coins: 100
 crate-rewards:
-  - type: COINS
-    amount: 150
-    weight: 15
-    name: '&6Монеты x150'
-  - type: COINS
-    amount: 25
-    weight: 30
-    name: '&6Монеты x25'
-  - type: ITEM
-    material: DIAMOND
-    amount: 1
-    weight: 12
-    name: '&bАлмаз'
-  - type: ITEM
-    material: NETHERITE_INGOT
-    amount: 1
-    weight: 3
-    name: '&cНезеритовый слиток'
   - type: CLASS
-    weight: 12
+    weight: 100
     name: '&dОткрытие случайного класса'
-  - type: ITEM
-    material: GOLDEN_APPLE
-    amount: 2
-    weight: 20
-    name: '&6Золотые яблоки x2'
-  - type: ITEM
-    material: ENDER_PEARL
-    amount: 2
-    weight: 20
-    name: '&dЭндер-жемчуги x2'
 
 quests:
   daily:
