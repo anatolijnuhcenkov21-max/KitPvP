@@ -69,7 +69,7 @@ public class KitCommand implements CommandExecutor, Listener {
             return;
         }
         if (isLocked(player, kit)) {
-            player.sendMessage(msg("class-locked").replace("%kit%", kit.getDisplayName()));
+            player.sendMessage(Message.color(msg("class-locked").replace("%kit%", kit.getDisplayName())));
             return;
         }
         select(player, kit);
@@ -78,7 +78,7 @@ public class KitCommand implements CommandExecutor, Listener {
     private void select(Player player, Kit kit) {
         KitSelection.set(player.getUniqueId(), kit.getId());
         plugin.getKitCooldownManager().set(player.getUniqueId(), kit.getId(), kit.getCooldownSeconds());
-        player.sendMessage(msg("class-selected").replace("%kit%", kit.getDisplayName()));
+        player.sendMessage(Message.color(msg("class-selected").replace("%kit%", kit.getDisplayName())));
     }
 
     private void sendCooldownMessage(Player player, Kit kit) {
@@ -153,7 +153,7 @@ public class KitCommand implements CommandExecutor, Listener {
         for (Kit kit : plugin.getKitManager().getKits()) {
             if (Message.color(kit.getDisplayName()).equals(displayName)) {
                 if (isLocked(player, kit)) {
-                    player.sendMessage(msg("class-locked").replace("%kit%", kit.getDisplayName()));
+                    player.sendMessage(Message.color(msg("class-locked").replace("%kit%", kit.getDisplayName())));
                     player.closeInventory();
                     return;
                 }
@@ -204,3 +204,4 @@ public class KitCommand implements CommandExecutor, Listener {
         return ChatColor.stripColor(item.getItemMeta().getDisplayName()).equals("Выбор класса");
     }
 }
+

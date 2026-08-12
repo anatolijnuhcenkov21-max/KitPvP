@@ -137,7 +137,7 @@ public class ShopGui implements Listener {
             return;
         }
         plugin.getKitStore().buy(player.getUniqueId(), kit.getId());
-        player.sendMessage(Message.of(msgs(), "class-unlocked").replace("%kit%", kit.getDisplayName()));
+        player.sendMessage(Message.color(Message.of(msgs(), "class-unlocked").replace("%kit%", kit.getDisplayName())));
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 2f);
         player.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, player.getLocation().add(0, 1, 0), 20, 0.5, 0.5, 0.5, 0);
         player.closeInventory();

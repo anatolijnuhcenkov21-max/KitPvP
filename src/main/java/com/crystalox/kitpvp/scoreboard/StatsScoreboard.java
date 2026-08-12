@@ -64,7 +64,8 @@ public class StatsScoreboard {
         objective.getScore(Message.color("&7Убийства: &f" + stats.getKills(uuid))).setScore(7);
         objective.getScore(Message.color("&7Смерти: &f" + stats.getDeaths(uuid))).setScore(6);
         objective.getScore(Message.color("&7Серия убийств: &f" + stats.getKillstreak(uuid))).setScore(5);
-        objective.getScore(Message.color(" ")).setScore(4);
+        objective.getScore(Message.color("&7Монеты: &6" + stats.getCoins(uuid))).setScore(4);
+        objective.getScore(Message.color(" ")).setScore(3);
     }
 
     private void applyTopLine(Objective objective) {
@@ -77,7 +78,7 @@ public class StatsScoreboard {
         if (name == null) {
             return;
         }
-        objective.getScore(Message.color("&7Топ: &f" + name + " - " + entry.kills)).setScore(3);
+        objective.getScore(Message.color("&7Топ: &f" + name + " - " + entry.kills)).setScore(2);
     }
 
     private String title() {

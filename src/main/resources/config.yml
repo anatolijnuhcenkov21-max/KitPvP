@@ -32,7 +32,7 @@ killstreak-rewards:
 
 scoreboard-title: '&6&lKITPVP'
 
-tab-format: '&7%player% &8[&7Серия:&f%streak% &7Монеты:&6%coins%&8]'
+tab-format: '&7%player% &8[&7Серия:&f%streak%&8]'
 coins-per-kill: 5
 killstreak-bonus:
   5: 10
@@ -678,3 +678,4 @@ messages:
   coins-earned: '&6+%amount% монет'
   crate-no-funds: '&cНедостаточно монет! Кейс стоит &6%cost%&c.'
   crate-rolled: '&aТебе выпало: &e%reward%&a!'
+

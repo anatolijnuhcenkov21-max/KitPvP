@@ -64,7 +64,7 @@ public class SpawnDropListener implements Listener {
         KitApplier.apply(p, kit);
         p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 200, 0, true, false));
         FALL_IMMUNE.add(p.getUniqueId());
-        p.sendMessage(Message.of(msgs, "kit-given").replace("%kit%", kit.getDisplayName()));
+        p.sendMessage(Message.color(Message.of(msgs, "kit-given").replace("%kit%", kit.getDisplayName())));
     }
 
     @EventHandler
