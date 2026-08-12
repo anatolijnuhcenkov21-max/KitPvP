@@ -1,9 +1,9 @@
 package com.crystalox.kitpvp.commands;
 
 import com.crystalox.kitpvp.KitPvPPlugin;
-import com.crystalox.kitpvp.economy.EconomyBridge;
 import com.crystalox.kitpvp.kit.Kit;
-import com.crystalox.kitpvp.kit.KitApplier;
+import com.crystalox.kitpvp.shop.KitSelection;
+import com.crystalox.kitpvp.stats.StatsManager;
 import com.crystalox.kitpvp.util.Format;
 import com.crystalox.kitpvp.util.Message;
 import org.bukkit.Bukkit;
@@ -24,6 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class KitCommand implements CommandExecutor, Listener {
 
@@ -54,11 +55,11 @@ public class KitCommand implements CommandExecutor, Listener {
             player.sendMessage(msg("kit-not-found").replace("%kit%", args[0]));
             return true;
         }
-        giveKit(player, kit);
+        selectKit(player, kit);
         return true;
     }
 
-    private void giveKit(Player player, Kit kit) {
+    private void selectKit(Player player, Kit kit) {
         if (kit.getPermission() != null && !player.hasPermission(kit.getPermission())) {
             player.sendMessage(msg("kit-no-permission").replace("%kit%", kit.getId()));
             return;
@@ -67,26 +68,35 @@ public class KitCommand implements CommandExecutor, Listener {
             sendCooldownMessage(player, kit);
             return;
         }
-        if (kit.getPrice() > 0 && !buyKit(player, kit)) {
-            return;
+        if (kit.getPrice() > 0 && !plugin.getKitStore().owns(player.getUniqueId(), kit.getId())) {
+            if (!buyKit(player, kit)) {
+                return;
+            }
         }
-        KitApplier.apply(player, kit);
-        player.getInventory().setItem(8, selectorItem());
-        plugin.getKitCooldownManager().set(player.getUniqueId(), kit.getId(), kit.getCooldownSeconds());
-        player.sendMessage(msg("kit-given")
-                .replace("%kit%", kit.getId())
-                .replace("%player%", player.getName()));
+        select(player, kit);
     }
 
     private boolean buyKit(Player player, Kit kit) {
-        if (EconomyBridge.withdraw(player, kit.getPrice())) {
-            player.sendMessage(msg("kit-bought")
-                    .replace("%kit%", kit.getId())
-                    .replace("%price%", Format.number(kit.getPrice())));
+        UUID uuid = player.getUniqueId();
+        StatsManager stats = plugin.getStatsManager();
+        int cost = (int) kit.getPrice();
+        if (stats.spendCoins(uuid, cost)) {
+            plugin.getKitStore().buy(uuid, kit.getId());
+            player.sendMessage(msg("class-bought")
+                    .replace("%kit%", kit.getDisplayName())
+                    .replace("%cost%", String.valueOf(cost)));
             return true;
         }
-        player.sendMessage(msg("kit-cannot-afford").replace("%kit%", kit.getId()));
+        player.sendMessage(msg("coins-not-enough")
+                .replace("%cost%", String.valueOf(cost))
+                .replace("%coins%", String.valueOf(stats.getCoins(uuid))));
         return false;
+    }
+
+    private void select(Player player, Kit kit) {
+        KitSelection.set(player.getUniqueId(), kit.getId());
+        plugin.getKitCooldownManager().set(player.getUniqueId(), kit.getId(), kit.getCooldownSeconds());
+        player.sendMessage(msg("class-selected").replace("%kit%", kit.getDisplayName()));
     }
 
     private void sendCooldownMessage(Player player, Kit kit) {
@@ -122,16 +132,13 @@ public class KitCommand implements CommandExecutor, Listener {
     }
 
     private String stateLine(Player player, Kit kit) {
-        if (kit.getPermission() != null && !player.hasPermission(kit.getPermission())) {
-            return "&cLocked";
-        }
-        if (plugin.getKitCooldownManager().hasCooldown(player.getUniqueId(), kit.getId())) {
-            return "&cCooldown: " + plugin.getKitCooldownManager().format(player.getUniqueId(), kit.getId());
+        if (plugin.getKitStore().owns(player.getUniqueId(), kit.getId())) {
+            return "&aOwned";
         }
         if (kit.getPrice() > 0) {
-            return "&6Price: " + Format.number(kit.getPrice());
+            return "&6Price: &f%price% &6coins".replace("%price%", Format.number(kit.getPrice()));
         }
-        return "&aAvailable";
+        return "&aFree";
     }
 
     @EventHandler
@@ -154,8 +161,8 @@ public class KitCommand implements CommandExecutor, Listener {
         Player player = (Player) event.getWhoClicked();
         for (Kit kit : plugin.getKitManager().getKits()) {
             if (Message.color(kit.getDisplayName()).equals(displayName)) {
+                select(player, kit);
                 player.closeInventory();
-                giveKit(player, kit);
                 return;
             }
         }

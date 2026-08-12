@@ -4,7 +4,10 @@ import com.crystalox.kitpvp.KitPvPPlugin;
 import com.crystalox.kitpvp.commands.KitCommand;
 import com.crystalox.kitpvp.kit.Kit;
 import com.crystalox.kitpvp.kit.KitApplier;
+import com.crystalox.kitpvp.shop.KitSelection;
+import com.crystalox.kitpvp.shop.ShopGui;
 import com.crystalox.kitpvp.util.Message;
+import com.crystalox.kitpvp.util.TabUpdater;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -26,7 +29,6 @@ public class JoinQuitListener implements Listener {
         Player player = event.getPlayer();
         teleportToSpawn(player);
         applyDefaultKit(player);
-        player.getInventory().setItem(8, KitCommand.selectorItem());
         plugin.getStatsManager().load(player.getUniqueId());
     }
 
@@ -46,6 +48,10 @@ public class JoinQuitListener implements Listener {
 
     private void applyDefaultKit(Player player) {
         player.getInventory().clear();
+        player.getInventory().setItem(8, KitCommand.selectorItem());
+        player.getInventory().setItem(4, ShopGui.diamondItem());
+        KitSelection.clear(player.getUniqueId());
+        TabUpdater.update(player, plugin);
         Kit kit = plugin.getKitManager().getDefaultKit();
         if (kit == null) {
             return;

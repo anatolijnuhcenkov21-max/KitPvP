@@ -5,6 +5,7 @@ import com.crystalox.kitpvp.arena.Arena;
 import com.crystalox.kitpvp.kit.Kit;
 import com.crystalox.kitpvp.kit.KitApplier;
 import com.crystalox.kitpvp.util.Message;
+import com.crystalox.kitpvp.util.TabUpdater;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -36,8 +37,10 @@ public class DeathListener implements Listener {
             return;
         }
         plugin.getStatsManager().addKill(killer.getUniqueId());
+        rewardKiller(killer);
         checkKillstreakReward(killer);
         plugin.getStatsManager().addDeath(victim.getUniqueId());
+        TabUpdater.update(victim, plugin);
         event.setDeathMessage(killMessage(victim, killer));
     }
 
@@ -55,6 +58,13 @@ public class DeathListener implements Listener {
                 applyDefaultKit(player);
             }
         }, 1L);
+    }
+
+    private void rewardKiller(Player killer) {
+        int coins = plugin.getConfig().getInt("coins-per-kill", 5);
+        plugin.getStatsManager().addCoins(killer.getUniqueId(), coins);
+        killer.sendMessage(Message.color(plugin.getConfig().getString("messages.coins-earned", "&6+%amount% coins").replace("%amount%", String.valueOf(coins))));
+        TabUpdater.update(killer, plugin);
     }
 
     private void checkKillstreakReward(Player killer) {

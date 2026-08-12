@@ -32,6 +32,40 @@ killstreak-rewards:
 
 scoreboard-title: '&6&lKITPVP'
 
+tab-format: '&7%player% &8[&7KS:&f%streak%&8]'
+coins-per-kill: 5
+kit-give-height: 120
+crate-cost: 50
+crate-rewards:
+  - type: COINS
+    amount: 150
+    weight: 15
+    name: '&6Coins x150'
+  - type: COINS
+    amount: 25
+    weight: 30
+    name: '&6Coins x25'
+  - type: ITEM
+    material: DIAMOND
+    amount: 1
+    weight: 12
+    name: '&bDiamond'
+  - type: ITEM
+    material: NETHERITE_INGOT
+    amount: 1
+    weight: 3
+    name: '&cNetherite Ingot'
+  - type: ITEM
+    material: GOLDEN_APPLE
+    amount: 2
+    weight: 20
+    name: '&6Golden Apples x2'
+  - type: ITEM
+    material: ENDER_PEARL
+    amount: 2
+    weight: 20
+    name: '&dEnder Pearls x2'
+
 kits:
   peasant:
     display-name: '&7Peasant'
@@ -149,7 +183,7 @@ kits:
       - '&7solid chain armor'
     cooldown-seconds: 20
     permission: 'none'
-    price: 0
+    price: 40
     items:
       - material: STONE_SWORD
         name: '&7Knight Sword'
@@ -173,7 +207,7 @@ kits:
       - '&7chain armor'
     cooldown-seconds: 20
     permission: 'none'
-    price: 0
+    price: 40
     items:
       - material: BOW
         name: '&aRanger Bow'
@@ -198,7 +232,7 @@ kits:
       - '&7a crossbow'
     cooldown-seconds: 20
     permission: 'none'
-    price: 0
+    price: 40
     items:
       - material: CROSSBOW
         name: '&2Hunter Crossbow'
@@ -222,7 +256,7 @@ kits:
       - '&7enemies'
     cooldown-seconds: 20
     permission: 'none'
-    price: 0
+    price: 60
     items:
       - material: STONE_SWORD
         name: '&cFire Blade'
@@ -245,7 +279,7 @@ kits:
       - '&7ice splashes'
     cooldown-seconds: 20
     permission: 'none'
-    price: 0
+    price: 60
     items:
       - material: STONE_SWORD
         name: '&bFrost Blade'
@@ -270,7 +304,7 @@ kits:
       - '&7splashes'
     cooldown-seconds: 20
     permission: 'none'
-    price: 0
+    price: 60
     items:
       - material: STONE_SWORD
         name: '&2Alchemist Blade'
@@ -298,7 +332,7 @@ kits:
       - '&7strength'
     cooldown-seconds: 25
     permission: 'none'
-    price: 0
+    price: 80
     items:
       - material: GOLDEN_AXE
         name: '&cBerserker Axe'
@@ -321,7 +355,7 @@ kits:
       - '&7from the shadows'
     cooldown-seconds: 25
     permission: 'none'
-    price: 0
+    price: 80
     items:
       - material: STONE_SWORD
         name: '&8Ninja Katana'
@@ -344,7 +378,7 @@ kits:
       - '&7to take down'
     cooldown-seconds: 20
     permission: 'none'
-    price: 0
+    price: 50
     items:
       - material: STONE_SWORD
         name: '&aMedic Blade'
@@ -367,7 +401,7 @@ kits:
       - '&7with sharp steel'
     cooldown-seconds: 25
     permission: 'none'
-    price: 0
+    price: 80
     items:
       - material: STONE_SWORD
         name: '&eSamurai Katana'
@@ -390,7 +424,7 @@ kits:
       - '&7sharp blade'
     cooldown-seconds: 30
     permission: 'none'
-    price: 0
+    price: 100
     items:
       - material: IRON_SWORD
         name: '&cWarrior Blade'
@@ -413,7 +447,7 @@ kits:
       - '&7chestplate and shield'
     cooldown-seconds: 30
     permission: 'none'
-    price: 0
+    price: 100
     items:
       - material: IRON_SWORD
         name: '&fPaladin Sword'
@@ -438,7 +472,7 @@ kits:
       - '&7pearls, iron blade'
     cooldown-seconds: 30
     permission: 'none'
-    price: 0
+    price: 120
     items:
       - material: IRON_SWORD
         name: '&8Assassin Blade'
@@ -462,7 +496,7 @@ kits:
       - '&7with power IV'
     cooldown-seconds: 30
     permission: 'none'
-    price: 0
+    price: 150
     items:
       - material: BOW
         name: '&fSniper Longbow'
@@ -485,7 +519,7 @@ kits:
       - '&7dark magic'
     cooldown-seconds: 30
     permission: 'none'
-    price: 0
+    price: 130
     items:
       - material: STONE_SWORD
         name: '&5Dark Blade'
@@ -511,7 +545,7 @@ kits:
       - '&7massive damage'
     cooldown-seconds: 30
     permission: 'none'
-    price: 0
+    price: 120
     items:
       - material: STONE_SWORD
         name: '&7Tank Hammer'
@@ -534,7 +568,7 @@ kits:
       - '&7of the arena'
     cooldown-seconds: 30
     permission: 'none'
-    price: 0
+    price: 110
     items:
       - material: GOLDEN_SWORD
         name: '&eGladiator Sword'
@@ -558,7 +592,7 @@ kits:
       - '&7from nowhere'
     cooldown-seconds: 30
     permission: 'none'
-    price: 0
+    price: 150
     items:
       - material: STONE_SWORD
         name: '&bGhost Blade'
@@ -601,3 +635,10 @@ messages:
   unknown-command: '&cUnknown command!'
   death-format: '&7%victim% &8was killed by &7%killer%'
   death-format-nokiller: '&7%victim% &8died'
+  class-selected: '&aClass &e%kit% &aselected! Jump off the spawn to receive it.'
+  class-bought: '&aYou bought class &e%kit% &afor &6%cost% coins&a!'
+  kit-already-owned: '&e%kit% &cis already owned.'
+  coins-not-enough: '&cYou need &6%cost% coins&c. You have &6%coins%&c.'
+  coins-earned: '&6+%amount% coins'
+  crate-no-funds: '&cNot enough coins! Crate costs &6%cost%&c.'
+  crate-rolled: '&aYou rolled: &e%reward%&a!'
