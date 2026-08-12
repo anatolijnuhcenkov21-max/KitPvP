@@ -34,6 +34,9 @@ scoreboard-title: '&6&lKITPVP'
 
 tab-format: '&7%player% &8[&7Серия:&f%streak%&8]'
 coins-per-kill: 5
+event-interval-minutes: 30
+event-duration-minutes: 10
+streak-king-reward: 200
 killstreak-bonus:
   5: 10
   10: 25
@@ -100,31 +103,40 @@ quests:
     kill-5: {name: '&aУбей 5 игроков', target: 5, reward: 30, period: DAILY}
     kill-10: {name: '&aУбей 10 игроков', target: 10, reward: 80, period: DAILY}
     crate-1: {name: '&aОткрой 1 кейс', target: 1, reward: 25, period: DAILY}
+    kill-15: {name: '&aУбей 15 игроков', target: 15, reward: 150, period: DAILY}
+    crate-2: {name: '&aОткрой 2 кейса', target: 2, reward: 60, period: DAILY}
+    kitkill-warrior-3: {name: '&cУбей 3 игроков классом Воин', target: 3, reward: 40, period: DAILY, kit: warrior}
+    kitkill-ranger-3: {name: '&aУбей 3 игроков классом Рейнджер', target: 3, reward: 40, period: DAILY, kit: ranger}
   weekly:
     kill-25: {name: '&eУбей 25 игроков', target: 25, reward: 200, period: WEEKLY}
     crate-5: {name: '&eОткрой 5 кейсов', target: 5, reward: 150, period: WEEKLY}
+    kill-50: {name: '&eУбей 50 игроков', target: 50, reward: 450, period: WEEKLY}
+    crate-10: {name: '&eОткрой 10 кейсов', target: 10, reward: 350, period: WEEKLY}
+    kitkill-warrior-10: {name: '&cУбей 10 игроков классом Воин', target: 10, reward: 250, period: WEEKLY, kit: warrior}
+    kitkill-ninja-10: {name: '&8Убей 10 игроков классом Ниндзя', target: 10, reward: 250, period: WEEKLY, kit: ninja}
 
 kits:
   peasant:
     display-name: '&7Крестьянин'
     icon: WOODEN_SWORD
     description:
-      - '&7Простой житель с деревянным'
-      - '&7мечом'
+      - '&7Простой, но уютный'
+      - '&7крестьянин'
     cooldown-seconds: 15
     permission: 'none'
     price: 0
     items:
-      - material: WOODEN_SWORD
-        name: '&7Деревянный клинок'
+      - material: STONE_SWORD
+        name: '&7Каменный клинок'
       - material: APPLE
-        amount: 1
+        amount: 2
     armor:
       helmet: {material: LEATHER_HELMET}
       chestplate: {material: LEATHER_CHESTPLATE}
       leggings: {material: LEATHER_LEGGINGS}
       boots: {material: LEATHER_BOOTS}
-    effects: []
+    effects:
+      - SPEED:300:0
   scout:
     display-name: '&aРазведчик'
     icon: STONE_AXE
@@ -676,6 +688,13 @@ messages:
   kit-already-owned: '&e%kit% &cуже открыт.'
   coins-not-enough: '&cТебе нужно &6%cost% монет&c. У тебя &6%coins%&c.'
   coins-earned: '&6+%amount% монет'
+  event-2x-start: '&6&lСОБЫТИЕ: &e2x Монеты &7— все убийства дают двойные монеты! (&f%time% &7мин)'
+  event-2x-end: '&7Событие &e2x Монеты &7закончилось.'
+  event-moon-start: '&c&lСОБЫТИЕ: &4Кровавая луна &7— урон увеличен в 1.5 раза! (&f%time% &7мин)'
+  event-moon-end: '&7Событие &cКровавая луна &7закончилось.'
+  event-streak-start: '&d&lСОБЫТИЕ: &5Король арены &7— у кого будет самая большая серия — получит &e%reward% &7монет!'
+  event-streak-end: '&7Событие &dКороль арены &7закончилось.'
   crate-no-funds: '&cНедостаточно монет! Кейс стоит &6%cost%&c.'
   crate-rolled: '&aТебе выпало: &e%reward%&a!'
+
 

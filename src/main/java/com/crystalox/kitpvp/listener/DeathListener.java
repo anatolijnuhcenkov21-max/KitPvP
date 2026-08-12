@@ -44,9 +44,10 @@ public class DeathListener implements Listener {
             return;
         }
         plugin.getStatsManager().addKill(killer.getUniqueId());
-        plugin.getQuestManager().onKill(killer.getUniqueId());
+        plugin.getQuestManager().onKill(killer.getUniqueId(), KitSelection.getActive(killer.getUniqueId()));
         checkKillstreakBonus(killer);
         checkKillstreakReward(killer);
+        plugin.getEventManager().onKill(killer.getUniqueId(), plugin.getStatsManager().getKillstreak(killer.getUniqueId()));
         if (hasBow(killer)) {
             killer.getInventory().addItem(new ItemStack(Material.ARROW, plugin.getConfig().getInt("arrows-per-kill", 8)));
         }
@@ -78,9 +79,9 @@ public class DeathListener implements Listener {
     }
 
     private void rewardKiller(Player killer) {
-        int coins = plugin.getConfig().getInt("coins-per-kill", 5);
-        plugin.getStatsManager().addCoins(killer.getUniqueId(), coins);
-        killer.sendMessage(Message.color(plugin.getConfig().getString("messages.coins-earned", "&6+%amount% монет").replace("%amount%", String.valueOf(coins))));
+        int perKill = plugin.getConfig().getInt("coins-per-kill", 5) * plugin.getEventManager().getKillMultiplier();
+        plugin.getStatsManager().addCoins(killer.getUniqueId(), perKill);
+        killer.sendMessage(Message.color(plugin.getConfig().getString("messages.coins-earned", "&6+%amount% монет").replace("%amount%", String.valueOf(perKill))));
         TabUpdater.update(killer, plugin);
     }
 

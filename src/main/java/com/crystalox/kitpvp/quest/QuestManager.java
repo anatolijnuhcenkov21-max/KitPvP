@@ -83,8 +83,23 @@ public class QuestManager {
         write(uuid, quest.getId(), progress, currentKey(quest.getPeriod()));
     }
 
-    public void onKill(UUID uuid) {
-        bump(uuid, "kill");
+    public void onKill(UUID uuid, String activeKit) {
+        for (Quest quest : daily) {
+            bumpKill(uuid, quest, activeKit);
+        }
+        for (Quest quest : weekly) {
+            bumpKill(uuid, quest, activeKit);
+        }
+    }
+
+    private void bumpKill(UUID uuid, Quest quest, String activeKit) {
+        if (quest.getId().startsWith("kitkill")) {
+            if (quest.getKit() != null && quest.getKit().equals(activeKit)) {
+                addProgress(uuid, quest, 1);
+            }
+        } else if (quest.getId().startsWith("kill")) {
+            addProgress(uuid, quest, 1);
+        }
     }
 
     public void onCrate(UUID uuid) {

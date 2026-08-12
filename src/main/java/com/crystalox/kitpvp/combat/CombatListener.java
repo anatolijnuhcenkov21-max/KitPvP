@@ -37,6 +37,14 @@ public class CombatListener implements Listener {
         }
         if (isInArena(damaged)) {
             trackCombo(attacker, damaged);
+            applyEventDamage(event);
+        }
+    }
+
+    private void applyEventDamage(EntityDamageByEntityEvent event) {
+        double multiplier = plugin.getEventManager().getDamageMultiplier();
+        if (multiplier != 1.0) {
+            event.setDamage(event.getDamage() * multiplier);
         }
     }
 

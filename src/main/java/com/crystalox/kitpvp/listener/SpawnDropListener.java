@@ -64,7 +64,8 @@ public class SpawnDropListener implements Listener {
         KitApplier.apply(p, kit);
         p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 200, 0, true, false));
         FALL_IMMUNE.add(p.getUniqueId());
-        p.sendMessage(Message.color(Message.of(msgs, "kit-given").replace("%kit%", kit.getDisplayName())));
+        p.sendMessage(Message.color(Message.of(msgs, "kit-given").replace("%kit%", kit.getDisplayName()).replace("%player%", p.getName())));
+        KitSelection.setActive(p.getUniqueId(), kit.getId());
     }
 
     @EventHandler
@@ -77,6 +78,7 @@ public class SpawnDropListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         FALL_IMMUNE.remove(event.getPlayer().getUniqueId());
+        KitSelection.clearActive(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
@@ -84,5 +86,6 @@ public class SpawnDropListener implements Listener {
         UUID uuid = event.getEntity().getUniqueId();
         FALL_IMMUNE.remove(uuid);
         KitSelection.clear(uuid);
+        KitSelection.clearActive(uuid);
     }
 }

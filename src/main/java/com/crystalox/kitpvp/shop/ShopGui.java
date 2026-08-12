@@ -195,16 +195,24 @@ public class ShopGui implements Listener {
     private Map<?, ?> pickReward(List<Map<?, ?>> rewards) {
         int total = 0;
         for (Map<?, ?> reward : rewards) {
-            total += ((Number) reward.get("weight")).intValue();
+            total += weightOf(reward);
         }
-        int roll = new Random().nextInt(total);
+        int roll = new Random().nextInt(Math.max(total, 1));
         for (Map<?, ?> reward : rewards) {
-            roll -= ((Number) reward.get("weight")).intValue();
+            roll -= weightOf(reward);
             if (roll < 0) {
                 return reward;
             }
         }
         return rewards.get(rewards.size() - 1);
+    }
+
+    private int weightOf(Map<?, ?> reward) {
+        try {
+            return ((Number) reward.get("weight")).intValue();
+        } catch (RuntimeException e) {
+            return 1;
+        }
     }
 
     private static ItemStack infoBook() {
@@ -217,8 +225,7 @@ public class ShopGui implements Listener {
         int cost = crateCost(player, plugin);
         return named(Material.CHEST, "&dКейс",
                 "&7Цена: &e%cost% &7монет (+10 за каждый кейс)".replace("%cost%", String.valueOf(cost)),
-                "&7Награды: монеты, алмазы,",
-                "&7незерит, золотые яблоки,",
+                "&7Награды: монеты, предметы",
                 "&7и ОТКРЫТИЕ КЛАССОВ!");
     }
 

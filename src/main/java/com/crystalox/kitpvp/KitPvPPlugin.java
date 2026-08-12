@@ -3,6 +3,7 @@ package com.crystalox.kitpvp;
 import com.crystalox.kitpvp.arena.ArenaManager;
 import com.crystalox.kitpvp.combat.CombatListener;
 import com.crystalox.kitpvp.commands.ArenaCommand;
+import com.crystalox.kitpvp.event.EventManager;
 import com.crystalox.kitpvp.commands.KitCommand;
 import com.crystalox.kitpvp.commands.StatsCommand;
 import com.crystalox.kitpvp.commands.TopCommand;
@@ -35,6 +36,7 @@ public class KitPvPPlugin extends JavaPlugin {
     private PlayerKitStore kitStore;
     private ShopVillager shopVillager;
     private QuestManager questManager;
+    private EventManager eventManager;
 
     public static KitPvPPlugin getInstance() {
         return instance;
@@ -48,6 +50,7 @@ public class KitPvPPlugin extends JavaPlugin {
         kitCooldownManager = new KitCooldownManager();
         statsManager = new StatsManager(this);
         arenaManager = new ArenaManager(this);
+        eventManager = new EventManager(this);
         kitStore = new PlayerKitStore(this);
         questManager = new QuestManager(this);
         clearArenaWeather();
@@ -118,5 +121,9 @@ public class KitPvPPlugin extends JavaPlugin {
 
     public QuestManager getQuestManager() {
         return questManager;
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
     }
 }

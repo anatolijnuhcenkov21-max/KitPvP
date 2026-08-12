@@ -1,6 +1,7 @@
 package com.crystalox.kitpvp.quest;
 
 import com.crystalox.kitpvp.KitPvPPlugin;
+import com.crystalox.kitpvp.kit.Kit;
 import com.crystalox.kitpvp.shop.ShopGui;
 import com.crystalox.kitpvp.util.Message;
 import org.bukkit.Bukkit;
@@ -92,6 +93,11 @@ public class QuestGui implements Listener {
         boolean complete = progress >= quest.getTarget();
         List<String> lore = new ArrayList<String>();
         lore.add(Message.color("&7Прогресс: &f" + progress + "&7/&f" + quest.getTarget()));
+        if (quest.getKit() != null) {
+            Kit kit = plugin.getKitManager().getKit(quest.getKit());
+            String kitName = kit != null ? kit.getDisplayName() : quest.getKit();
+            lore.add(Message.color("&7Класс: &f" + kitName));
+        }
         if (complete) {
             lore.add(Message.color("&aНажми, чтобы забрать!"));
         }
